@@ -56,14 +56,7 @@ class Kitchen_Sink():
     def root_node_executor(self,queue,task,**kwargs):
         executor = e.ExecutorAgent(self)
         
-    def delete_tasks(self):
-            for key in self.running_dictionary.keys():
-                if 'task ' in key.lower():
-                    del self.running_dictionary[key]
-            return self.running_dictionary
-        
-    def filter_dict(self,keys):
-        return {k: self.running_dictionary[k] for k in keys if k in self.running_dictionary}
+
     
     def start_supervising(self,type,supervision_list):
         supervisor_criteria = threading.Thread(
