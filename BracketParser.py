@@ -1,9 +1,27 @@
+import re
 class BracketParser():
     def __init__(self,output:str):
         self._text = output["node_tasks"]       
         self._lines = self._text.split('\n')
         
     def parse(self):
+        pattern_key = r'\[?(?P<key>.+?)\]?:'
+        pattern_value = r'(?P<value>.*)'
+        text = self._text.strip()
+        data_dict = {}
+        while text:
+            key_match = re.search(pattern_key, text)
+            if key_match:
+                text = text[key_match.end():].strip()
+                value_match = re.search(pattern_value, text)
+                if value_match:
+                    new = {key_match.group('key').lower().strip(): value_match.group('value').lower().strip()}
+                    data_dict = dict(data_dict, **new)
+                    text = text[value_match.end():].strip()
+        return data_dict
+
+        
+    def split_parse(self):
         data_dict={}
         current_key=None
         for line in self._lines:
@@ -42,6 +60,8 @@ class BracketParser():
             if 'output' in key.lower():
                 task_list.append(f"{key}: {value}")
         return task_list
+    
+    
 
 
 

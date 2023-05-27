@@ -144,11 +144,10 @@ class Persona():
                     - Each deliverable must be something that is achievable for an AI.  \n\n
                     - Each deliverable should contain detailed information about the design of the deliverable, including required inputs components, sub-components, how to handle any possible exceptions, and delivery format.                     
                     
-                    Return a response in the following format: \n\n
+                    Your response should be labeled and formatted as shown below: \n
                     [OUTPUT OPTION 1]:\n
                     [OUTPUT OPTION 2]:\n
-                    ...\n
-                    [OUTPUT OPTION {n}]:\n
+                    etc...
                     '''   
                     
         self.design_plan_prompt = '''You are a sophisticated AI system based on a large language model. You are designing a specification document for the output below:\n

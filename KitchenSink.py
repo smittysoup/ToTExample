@@ -38,9 +38,13 @@ class Kitchen_Sink():
         design_options[0].join()
         self.running_dictionary = dict(self.running_dictionary,**(design_options[1]).queue.get())
         self.running_dictionary["designs"] = b.BracketParser.get_designs(self.running_dictionary)
-        supervise = self.add_agent("Evaluate Designs",['goal','criteria','designs','n'])
+        supervise = self.add_agent("Approve Design",['goal','criteria','designs','n'])
         supervise[0].join()
         self.running_dictionary = dict(self.running_dictionary,**(supervise[1]).queue.get())
+        self.running_dictionary["output"] = self.running_dictionary[self.running_dictionary["design output choice"]]
+        design = self.add_agent("Design Plan",['output','criteria'])
+        design[0].join()
+        self.running_dictionary = dict(self.running_dictionary,**design[1].queue.get())
 
         
     
