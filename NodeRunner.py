@@ -3,15 +3,15 @@ from langchain import OpenAI
 import openai, os, threading, test_input, BracketParser as b
 from queue import Queue
 import ModifyDictionary
-from Supervisor import Supervisor
+from Persona import Persona
 
 # Setting the OpenAI API key from the environment variables
 openai.api_key=os.getenv("OPENAI_API_KEY")
 
 # Defining NodeSupervisor class that extends the Supervisor class
-class NodeSupervisor(Supervisor):
+class NodeRunner(Persona):
     '''
-    Class create a supervisor thread that sends a type of query to GPT and stores the resut in the queue object that can then be used in other threads
+    Class create a persona thread that sends a type of query to GPT and stores the resut in the queue object that can then be used in other threads
     requires and instance of Open AI API object from Langchain and a copy of the running dictionary
     
     '''
@@ -31,12 +31,16 @@ class NodeSupervisor(Supervisor):
         response = self.chain(short_list)
         # Parse the response to create a structured output
         output = b.BracketParser(response)
+        
         parsed_output = output.parse()
+        for k in parsed_output:
+            print(k + ": " + parsed_output[k] + "\n")
         # Put the parsed output to the queue
         self.queue.put(parsed_output)
 
     def start_thread(self):
         # Create and start a new thread for the supervise method
+        print(f"Starting a new thread for {self.task} with {self.items_list}")
         thread = threading.Thread(
             target=self._supervise,
             args=(self.items_list,)
@@ -48,10 +52,17 @@ class NodeSupervisor(Supervisor):
 if __name__ == '__main__':
     # variables for testing
     llm = OpenAI(model_name="text-davinci-003", temperature=0) 
-    dictionary_sample = {"input": test_input.input} #will be passed from KS
+    dictionary_sample = {
+        "input": test_input.input,
+        "goal": "make webpage",
+        "tools": "write code",
+        "criteria": "make it look nice",
+        "n":str(5)
+        } #will be passed from KS
 
     # Create an instance of NodeSupervisor with the instantiated OpenAI model and the sample dictionary
-    ns = NodeSupervisor(llm, dictionary_sample,"Get Criteria",["input"])
+
+    ns = NodeRunner(llm, dictionary_sample,"Design",['input','goal','tools','criteria','n'])
     thread = ns.start_thread()   # Starting the thread
     thread.join #waiting for thread to finish
     print(ns.queue.get()) #printing Results

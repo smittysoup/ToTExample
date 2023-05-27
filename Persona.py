@@ -1,8 +1,7 @@
 from langchain import OpenAI, PromptTemplate, LLMChain
-from langchain.chains import SequentialChain, TransformChain
-import openai, os, re
 
-class Supervisor():
+
+class Persona():
     def __init__(self, llm:OpenAI):
         self._llm = llm
 
@@ -92,18 +91,96 @@ class Supervisor():
                             [NO]\n
                             [REASON]  
                     '''
+                    
+        self.plan_prompt = '''You are a sophisticated AI system based on a large language model. You have been given a starting task by your Supervisor. 
+                    Your job is to break this task into a chain of tasks that can be accomplished by a language model.  
+                    A chain of tasks includes three important components:\n
+                    1. task decomposition. The task should be decomposed into logical, discrete task steps. 
+                        Each task represents a manageable piece of the overall task. \n
+                    2. tasks are literal in the sense of computational literalism.  Every precise detail is outlined with no room for interpretation.
+                    3. In general, a task should be “small” enough so that language models (LMs) can generate promising and diverse samples (e.g.generating
+                    a whole book is usually too “big” to be coherent). \n
+                    4.. A task should be “big” enough so that LMs can evaluate its prospect toward problem solving 
+                    (e.g.generating one token is usually too “small” to evaluate).\n\n
+                    
+                    Your response should be formatted as a numbered list of tasks.  
+                    Each task should start with the phrase "I need to..."\n
+                    Your response should be labeled and formatted as shown below: \n\
+                    [TASK 1]: \n
+                    [TASK 2]: \n
+                    etc..\n\n
+                    
+                    [STARTING TASK]:{input}
+                    '''   
+        
+        self.replan_prompt = '''
+                    You are a sophisticated AI system based on a large language model. You have been given a starting task by your supervisor. 
+                    To accomplish your work, you previously generated a list of [TASKS] based on the following criteria:\n
+                            1. each task is discrete with logical steps that can be accomplished by a Large Language Model AI.
+                            2. A task is big enough to be evaluated coherently but small enough to fit into a single prompt to an LLM. 
+                            3. In total, completion of the tasks will accomplish the users task. \n\n
+                    
+                    [STARTING TASK]: {input}\n\n
+                    
+                    [ORIGINAL TASKS]:{tasks}\n\n
+                    
+                    Your supervisor has rejected your list of tasks due to the reasons below. \n
+                    [REJECTION REASONS]: {rejection}\n\n
+                    
+                    Modify your tasks to incorporate the feedback from your supervisor.
+                    Your response should be formatted as a numbered list of tasks.  Label your tasks as [TASK 1], [TASK 2], etc. 
+                    Each task should start with the phrase "I need to..."\n\n
+                    [TASKS]:
+                    ''' 
+                    
+        self.design_prompt = '''You are a sophisticated AI system based on a large language model. You have been given a task by your supervisor. \n
+                    The goals and success criteria for this task are below:\n
+                    [TASK]:{input}\n
+                    [GOAL]:{goal}\n
+                    [SUCCESS CRITERIA]:{criteria}\n\n
+                    
+                    Your job is to design {n} unique options for deliverables that a Large Language model could generate to satisfy the goal and success criteria of this task. Your supervisor will select from among these options to determine the final output. \n
+                    - The AI has several tools optionally available, including {tools}. The AI can use as many of these tools as it needs to create an output.\n
+                    - Each deliverable must be something that is achievable for an AI.  \n\n
+                    - Each deliverable should contain detailed information about the design of the deliverable, including required inputs components, sub-components, how to handle any possible exceptions, and delivery format.                     
+                    
+                    Return a response in the following format: \n\n
+                    [OUTPUT OPTION 1]:\n
+                    [OUTPUT OPTION 2]:\n
+                    ...\n
+                    [OUTPUT OPTION {n}]:\n
+                    '''   
+                    
+        self.design_plan_prompt = '''You are a sophisticated AI system based on a large language model. You are designing a specification document for the output below:\n
+                    [OUTPUT]:{output}\n
+                    [SUCCESS CRITERIA]:{criteria}\n\n
+                    
+                    Format the above output into a specification document.  Return a response in the following format:\n
+                    [TITLE]:\n
+                    [SUMMARY]:\n
+                    [OUTPUT FORMAT]:\n
+                    [COMPONENTS]:\n
+                    [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:\n
+                    [TOOLS AND THEIR USES]:\n                    
+                    [SUCCESS CRITERIA]:   \n          
+
+                    '''   
     def get_prompt_chain(self,prompt_list,template_name):
         string_template = self.get_success_criteria if template_name == "Get Criteria" \
-            else self.eval_task if template_name == "Evaluate Plan" \
-            else self.eval_tasks if template_name=="Evaluate Task" \
+            else self.eval_tasks if template_name == "Evaluate Plan" \
+            else self.eval_task if template_name=="Evaluate Task" \
             else self.eval_design if template_name=="Approve Design" \
-            else self.eval_output if template_name=="Approve Deliverable" else None
+            else self.eval_output if template_name=="Approve Deliverable" \
+            else self.plan_prompt if template_name=="Plan" \
+            else self.replan_prompt if template_name=="Replan" \
+            else self.design_prompt if template_name=="Design" \
+            else self.design_plan_prompt if template_name=="Design Plan" else None
 
         prompt = PromptTemplate(input_variables=prompt_list, 
                 template=(string_template)
                 )
         
-        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks",verbose=True)        
+        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks")        
         return(eval_plan_chain)
     
  

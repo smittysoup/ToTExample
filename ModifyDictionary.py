@@ -1,6 +1,6 @@
 def delete_tasks(running_dictionary):
         for key in running_dictionary.keys():
-            if 'task ' in key.lower():
+            if 'task ' or 'pass' in key.lower():
                 del running_dictionary[key]
         return running_dictionary
     

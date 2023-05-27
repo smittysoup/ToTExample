@@ -46,14 +46,14 @@ class Planner():
                     [TASKS]:
                     ''' 
                     
-    def _plan_chain(self):
+    def plan_chain(self):
         prompt = PromptTemplate(input_variables=['input'], 
                 template=(self._plan_prompt)
                 )
         plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks",verbose=True)        
         return(plan_chain)
     
-    def _replan_chain(self):
+    def replan_chain(self):
         prompt = PromptTemplate(input_variables=['input','tasks','rejection'], 
                 template=(self._replan_prompt)
                 )

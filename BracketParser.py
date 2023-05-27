@@ -35,4 +35,13 @@ class BracketParser():
             if 'criteria' in key.lower():
                 task_list.append(f"{key}: {value}")
         return task_list
+    
+    def get_designs(dictionary):
+        task_list = []
+        for key, value in dictionary.items():
+            if 'output' in key.lower():
+                task_list.append(f"{key}: {value}")
+        return task_list
+
+
 
