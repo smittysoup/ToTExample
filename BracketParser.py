@@ -14,10 +14,32 @@ class BracketParser():
             if key_match:
                 text = text[key_match.end():].strip()
                 value_match = re.search(pattern_value, text)
-                if value_match:
-                    new = {key_match.group('key').lower().strip(): value_match.group('value').lower().strip()}
+                if key_match.group('key').lower().strip()=='sequence of steps to complete output':
+                    next_key_match = re.search(pattern_key, text)
+                    if next_key_match:
+                        value_match_str = text[:next_key_match.start()].lower().strip()
+                        value_match_str = value_match_str.lower().strip()
+                    else: 
+                        value_match_str = text
+                else:   
+                    value_match_str = value_match.group('value').lower().strip()
+                if value_match_str:
+                    new = {key_match.group('key').lower().strip(): value_match_str}
                     data_dict = dict(data_dict, **new)
-                    text = text[value_match.end():].strip()
+                    if key_match.group('key').lower().strip()=='sequence of steps to complete output':
+                        if next_key_match:
+                            text = text[next_key_match.start():].strip()
+                        else: 
+                            text = None
+                    else: 
+                        text = text[value_match.end():].strip()
+                        
+            else: 
+                '''If there is no key, then the value is the output to avoid an infinite loop'''
+                if text:
+                    new = {'output': text}
+                    data_dict = dict(data_dict, **new)
+                    text = None
         return data_dict
 
         

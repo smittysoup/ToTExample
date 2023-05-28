@@ -46,8 +46,6 @@ class Kitchen_Sink():
         design[0].join()
         self.running_dictionary = dict(self.running_dictionary,**design[1].queue.get())
 
-        
-    
     def execute(self):
         pass
            

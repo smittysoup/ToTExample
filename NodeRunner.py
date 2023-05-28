@@ -54,15 +54,21 @@ if __name__ == '__main__':
     llm = OpenAI(model_name="text-davinci-003", temperature=0) 
     dictionary_sample = {
         "input": test_input.input,
+        "output": "output option 2: the ai will use the write code tool to create a webpage with a left navigation menu. the ai will use the internet search tool to find existing webpages with a left navigation menu that are aesthetically pleasing, functional, and optimized for mobile devices and seo. the ai will then use the write code tool to create a webpage with a left navigation menu based on the existing webpages. the ai will also use the write documentation tool to create detailed instructions on how to use the webpage and left navigation menu. the deliverable will be a webpage with a left navigation menu and accompanying documentation.",
         "goal": "make webpage",
         "tools": "write code",
-        "criteria": "make it look nice",
+        "criteria": '''
+            success criteria 1: the webpage should be aesthetically pleasing.
+            success criteria 2: the left navigation menu should be functional and easy to use.
+            success criteria 3: the webpage should be optimized for mobile devices.
+            success criteria 4: the webpage should be optimized for search engine optimization (seo).
+        ''',
         "n":str(5)
         } #will be passed from KS
 
     # Create an instance of NodeSupervisor with the instantiated OpenAI model and the sample dictionary
 
-    ns = NodeRunner(llm, dictionary_sample,"Design",['input','goal','tools','criteria','n'])
+    ns = NodeRunner(llm, dictionary_sample,"Design Plan",['output','criteria'])
     thread = ns.start_thread()   # Starting the thread
     thread.join #waiting for thread to finish
     print(ns.queue.get()) #printing Results

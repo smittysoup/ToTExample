@@ -36,5 +36,6 @@ class TestParser(unittest.TestCase):
         result = b(self.output).parse()
         self.assertEqual(result, {"goal": "this is the goal","goal": "this is the goal"})
         
+        
 if __name__ == '__main__':
     unittest.main()

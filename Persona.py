@@ -179,7 +179,7 @@ class Persona():
                 template=(string_template)
                 )
         
-        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks")        
+        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks", verbose=True)        
         return(eval_plan_chain)
     
  
