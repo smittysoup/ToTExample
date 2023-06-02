@@ -26,11 +26,14 @@ class NodeRunner(Persona):
 
     def _supervise(self, supervision_list):
         # Filter the input dictionary according to the supervision list
-        short_list = ModifyDictionary.filter_dict(self.din, supervision_list)
+        filtered_dictionary = ModifyDictionary.filter_dict(self.din, supervision_list)
+        short_list = []
         # Execute the chain of tasks on the filtered dictionary
-        response = self.chain(short_list)
+        response = self.chain.generate([filtered_dictionary])
+        print("Tokens Used: " + str(response.llm_output["token_usage"]["total_tokens"])+ "\n")
+        result = response.generations[0][0].text
         # Parse the response to create a structured output
-        output = b.BracketParser(response)
+        output = b.BracketParser(result)
         
         parsed_output = output.parse()
         for k in parsed_output:

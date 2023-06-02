@@ -140,7 +140,6 @@ class Persona():
                     [SUCCESS CRITERIA]:{criteria}\n\n
                     
                     Your job is to design {n} unique options for deliverables that a Large Language model could generate to satisfy the goal and success criteria of this task. Your supervisor will select from among these options to determine the final output. \n
-                    - The AI has several tools optionally available, including {tools}. The AI can use as many of these tools as it needs to create an output.\n
                     - Each deliverable must be something that is achievable for an AI.  \n\n
                     - Each deliverable should contain detailed information about the design of the deliverable, including required inputs components, sub-components, how to handle any possible exceptions, and delivery format.                     
                     
@@ -164,6 +163,35 @@ class Persona():
                     [SUCCESS CRITERIA]:   \n          
 
                     '''   
+                    
+        self.Executor_code = '''You are a skilled web developer.  Your designer has provided you with a specification for a webpage. \n
+                    use the requirements below to produce webpage code that meets the success criteria.  Your response should be coded using HTML, CSS and Javascript as needed. \n\n
+                    [OUTPUT]:{output}\n
+                    [SUCCESS CRITERIA]:{criteria}\n\n
+                    
+                    Format the above output into a specification document.  Return a response in the following format:\n
+                    [TITLE]:{title}\n
+                    [SUMMARY]:{summary}\n
+                    [OUTPUT FORMAT]:{output_format}\n
+                    [COMPONENTS]:{components}\n
+                    [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:{sequence_of_steps_to_complete_output}\n
+                    
+                    Your response should be labeled and formatted as shown below: \n
+                    [WEBPAGE CODE]: <YOUR HTML CODE...>\n
+
+                    '''   
+        self.Exectuor_puppeteer = '''You are a skilled web developer.  You have already created an HTML script and will now create a separate Node.js script to use Puppeteer to test your code. 
+                    This script would need to do the following: \n
+                    - Load the generated page.\n
+                    - Interact with the page as needed (e.g., fill in and submit the form if a form exists).\n
+                    - Evaluate any JavaScript on the page to check for errors.\n
+                    - log any errors to the console. \n
+                    
+                    Here is the HTML Page: \n
+                    {webpage_code}\n\n
+                    Your response should be labeled and formatted as shown below: \n
+                    [PUPPETEER SCRIPT] (your script goes here...)\n'''
+
     def get_prompt_chain(self,prompt_list,template_name):
         string_template = self.get_success_criteria if template_name == "Get Criteria" \
             else self.eval_tasks if template_name == "Evaluate Plan" \
@@ -173,13 +201,16 @@ class Persona():
             else self.plan_prompt if template_name=="Plan" \
             else self.replan_prompt if template_name=="Replan" \
             else self.design_prompt if template_name=="Design" \
-            else self.design_plan_prompt if template_name=="Design Plan" else None
+            else self.design_plan_prompt if template_name=="Design Plan" \
+            else self.Executor_code if template_name == "Write Code" \
+            else self.Executor_puppeteer if template_name == "Test Code" \
+            else None
 
         prompt = PromptTemplate(input_variables=prompt_list, 
                 template=(string_template)
                 )
         
-        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks", verbose=True)        
+        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks")      
         return(eval_plan_chain)
     
  

@@ -1,7 +1,7 @@
 import re
 class BracketParser():
     def __init__(self,output:str):
-        self._text = output["node_tasks"]       
+        self._text = output       
         self._lines = self._text.split('\n')
         
     def parse(self):
@@ -44,6 +44,9 @@ class BracketParser():
 
         
     def split_parse(self):
+        '''
+        old
+        '''
         data_dict={}
         current_key=None
         for line in self._lines:

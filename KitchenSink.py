@@ -1,14 +1,15 @@
 from langchain import OpenAI
 import openai, os, test_input, BracketParser as b, ModifyDictionary
 from NodeRunner import NodeRunner
+import ExecutorAgent as ea
 
 openai.api_key=os.getenv("OPENAI_API_KEY")
 
 class Kitchen_Sink():
     def __init__(self,input:str):
         self._input = input
-        self._llm = OpenAI(model_name="text-davinci-003", temperature=0)  
-        self._n_solutions=5    
+        self._llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=3000)  
+        self._n_solutions=3   
         self.running_dictionary ={"input":input}
         self.count_recurse = 0
         self.dictionaries={}
@@ -32,9 +33,8 @@ class Kitchen_Sink():
         self.running_dictionary = dict(self.running_dictionary,**(supervise[1]).queue.get())
         self.running_dictionary["criteria"] = b.BracketParser.get_criteria(self.running_dictionary)
         self.running_dictionary["n"] = self._n_solutions
-        self.running_dictionary['tools'] = ["Internet Search","write code","write documentation"]
         
-        design_options = self.add_agent("Design",['input','goal','tools','criteria','n'])
+        design_options = self.add_agent("Design",['input','goal','criteria','n'])
         design_options[0].join()
         self.running_dictionary = dict(self.running_dictionary,**(design_options[1]).queue.get())
         self.running_dictionary["designs"] = b.BracketParser.get_designs(self.running_dictionary)
@@ -47,7 +47,13 @@ class Kitchen_Sink():
         self.running_dictionary = dict(self.running_dictionary,**design[1].queue.get())
 
     def execute(self):
-        pass
+        code = self.add_agent("Write Code",['output','criteria','title','summary','output_format','components','sequence_of_steps_to_complete_output'])
+        code[0].join()
+        self.running_dictionary = dict(self.running_dictionary,**code[1].queue.get())
+        self.running_dictionary["webpage_code"] = ea.html_linter(self.running_dictionary["webpage_code"])
+        puppeteer = self.add_agent("Test Code",['webpage_code'])
+        puppeteer[0].join()
+        self.running_dictionary = dict(self.running_dictionary,**puppeteer[1].queue.get())
            
     def add_agent(self,task, ilist):
         runner = NodeRunner(self._llm, self.running_dictionary,task,ilist) 
@@ -78,7 +84,7 @@ class Kitchen_Sink():
         self.dictionaries[str(self.count_recurse)] = self.running_dictionary
         
         for task in self.running_dictionary["tasks"]:
-            self.running_dictionary["current_task"] = task
+            self.running_dictionary["current task"] = task
             supervise = self.add_agent("Evaluate Task",['tasks','current_task'])
 
             supervise[0].join()

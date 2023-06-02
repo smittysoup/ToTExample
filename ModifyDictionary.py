@@ -5,4 +5,4 @@ def delete_tasks(running_dictionary):
         return running_dictionary
     
 def filter_dict(running_dictionary,keys):
-    return {k: running_dictionary[k] for k in keys if k in running_dictionary}
+    return {k: running_dictionary[k.replace("_"," ")] for k in keys if k.replace("_"," ") in running_dictionary}
