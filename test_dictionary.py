@@ -1,16 +1,39 @@
 dictionary = (
-{
-    "input": '''create a website that has a left navigation menu with a library of chats and a main page that has a chat box. 
-                        there should be a button to send chats and space to see responses along with the chat history with a timestamp. 
-                        There should also be a button to save the chat, at which point it is added to the list on the left navigation. 
-                        The color scheme should remind me of a forest on a sunny summer day''',
-    "n": 3,
-    "pass": "",
-    "webpage_errors": "",
-    "webpage_code": "code",
-    "code_pass": "code_pass",
-    "code_pass_reason": "code_pass_reason"   
-    
-    
-}
+{  'input': '''create a website that has a left navigation menu with a library of chats and a main page that has a chat box. \n                        there should be a button to send chats and space to see responses along with the chat history with a timestamp. \n                        There should also be a button to save the chat, at which point it is added to the list on the left navigation. \n                        The color scheme should remind me of a forest on a sunny summer day''',
+ 'n': 3, 
+ 'pass': 'Yes\n', 
+ 'webpage_errors': '', 
+ 'webpage_code': 'code', 
+ 'code_pass': 'code_pass', 
+ 'code_pass_reason': 'code_pass_reason', 
+ 'task_1': 'I need to create a website with a left navigation menu. \n  ',              
+    'task_2': 'I need to create a library of chats in the left navigation menu. \n  ',
+    'task_3': 'I need to create a main page with a chat box. \n                    ', 
+    'task_4': 'I need to create a button to send chats. \n                    ', 
+    'task_5': 'I need to create space to see responses along with the chat history with a timestamp. \n                    ', 
+    'task_6': 'I need to create a button to save the chat, at which point it is added to the list on the left navigation. \n                    ', 
+    'task_7': 'I need to create a color scheme that reminds me of a forest on a sunny summer day.', 
+    'goal': '''Create a website with a left navigation menu, a main page with a chat box, and a color scheme that reminds the user of a forest on a sunny summer day. \n                        \n ''',       
+  'success_criteria_1': 'Left navigation menu should contain a library of chats. \n                        ', 
+  'success_criteria_2': 'Main page should have a chat box with a button to send chats and space to see responses along with the chat history with a timestamp. \n                        ', 
+  'success_criteria_3': 'Button to save the chat, at which point it is added to the list on the left navigation. \n                        ', 
+  'success_criteria_4': 'Color scheme should remind the user of a forest on a sunny summer day. \n                        ', 
+  'tasks': ['task_1: I need to create a website with a left navigation menu. \n                    ', 
+            'task_2: I need to create a library of chats in the left navigation menu. \n                    ', 
+            'task_3: I need to create a main page with a chat box. \n          ',
+             'task_4: I need to create a button to send chats. \n                    ', 
+             'task_5: I need to create space to see responses along with the chat history with a timestamp. \n                    ', 
+             'task_6: I need to create a button to save the chat, at which point it is added to the list on the left navigation. \n                    ', 
+             'task_7: I need to create a color scheme that reminds me of a forest on a sunny summer day.'], 
+  'criteria': ['success_criteria_1: Left navigation menu should contain a library of chats. \n                        ', 
+               'success_criteria_2: Main page should have a chat box with a button to send chats and space to see responses along with the chat history with a timestamp. \n                        ', 
+               'success_criteria_3: Button to save the chat, at which point it is added to the list on the left navigation. \n                        ', 
+               'success_criteria_4: Color scheme should remind the user of a forest on a sunny summer day.'], 
+                'success_criteria_5': 'All tasks in the list should be completed before the goal is achieved. \n                        ', 
+                'success_criteria_6': 'The completion of the current task should be handed off to the AI system to complete the next task.',
+  'reason': "The AI's plan meets all of the criteria. Each sub-task is discrete with logical steps that can be accomplished by a Large Language Model AI, each sub-task is literal and specific, and each sub-task is big enough to be evaluated coherently but small enough to fit into a single prompt to an LLM. In total, completion of the sub-tasks will meet the project's success criteria.", 
+  'current_task': 'task_1: I need to create a website with a left navigation menu. \n                    ', 
+  'task_pass': 'Yes\n                    ', 
+  'task_pass_reason': 'This task is ready to be passed on to a designer as it is a single deliverable, requires only one process, and does not lead to a response that is more than 2,000 words long.'
+} 
 )

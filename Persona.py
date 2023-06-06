@@ -156,7 +156,7 @@ class Persona():
                     [ORIGINAL TASKS]:{tasks}\n\n
                     
                     Your supervisor has rejected your list of tasks due to the reasons below. \n
-                    [REJECTION REASONS]: {rejection}\n\n
+                    [REJECTION REASONS]: {reason}\n\n
                     
                     Modify your tasks to incorporate the feedback from your supervisor.
                     Your response should be formatted as a numbered list of tasks.  Label your tasks as [TASK 1], [TASK 2], etc. 

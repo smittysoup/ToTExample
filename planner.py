@@ -1,12 +1,15 @@
 from NodeRunner import Agent
 from ModifyDictionary import ModifyDictionary
 from queue import Queue
+from designer import designer
 
 class planner(Agent):
-    def __init__(self,running_dictionary,count_recurse,llm,filepath):
+    def __init__(self,running_dictionary,count_recurse,llm,filepath,test=False):
         self._running_dictionary = running_dictionary
+        self._dictionaries = {}
         self._count_recurse = count_recurse
         self._llm = llm
+        self._test = test
         self._filepath = filepath
         self.queue = Queue()
   
@@ -19,6 +22,10 @@ class planner(Agent):
         
     def recurse_plan(self):
         
+        if self._count_recurse>1:
+            self.create_plan()
+            self.sign_off_plan()
+        
         for task in self._running_dictionary["tasks"]:
             self._running_dictionary["current_task"] = task
             approve_task = self.start_thread("Evaluate Task",['tasks','current_task'])
@@ -26,17 +33,22 @@ class planner(Agent):
             self.run_thread(approve_task)
             self.run_thread(refine_goal)
             
-            if self._running_dictionary["task_pass"].lower() !="yes":
+            if self._running_dictionary["task_pass"].lower().strip() !="yes":
                 '''
                 if task needs to be broken down further, stash dictionary to archive,
                 then restart planning process with current task as input
                 ''' 
                 #offload dictionary with signed off plan
-                self.dictionaries[str(self.count_recurse)] = self._running_dictionary
+                self._dictionaries[str(self.count_recurse)] = self._running_dictionary
                 self._running_dictionary["input"]=task
+                self._count_recurse +=1
                 self.recurse_plan()
-            else:                 
-                self.design()
+            else: 
+                if self._test:
+                    print(self._running_dictionary)
+                else:
+                    d = designer(self._running_dictionary,self._llm,self._filepath)                
+                    d.design()
                 
             return None
     
@@ -47,10 +59,10 @@ class planner(Agent):
         self.run_thread(plan)
         self.run_thread(supervise)
         
-        modify_dictionary = ModifyDictionary(running_dictionary)   
+        modify_dictionary = ModifyDictionary(self._running_dictionary)   
         #collapse tasks and criteria to list variables        
-        modify_dictionary.collapse_dictionary_item("tasks","task")      
-        modify_dictionary.collapse_dictionary_item("criteria","criteria")
+        self._running_dictionary['tasks'] = modify_dictionary.get_items("task")      
+        self._running_dictionary['criteria'] = modify_dictionary.get_items("criteria")
         
         return None
         
@@ -62,18 +74,18 @@ class planner(Agent):
         #initialize pass to null
         self._running_dictionary["pass"] = ""   
           
-        while (self._running_dictionary["pass"]).lower()!="yes":
+        while (self._running_dictionary["pass"]).lower().strip()!="yes":
             #start plan approval thread. 
             approve_plan = self.start_thread("Evaluate Plan",['tasks','criteria','goal'])
             self.run_thread(approve_plan)
             
             #if the plan is not approved, then replan and add new plan to dictionary, replacing old plan
             #loop will continue until the plan is approved
-            if self._running_dictionary["pass"].lower()!="yes":
-                plan = self.start_thread("Replan",["input,criteria,goal"])
+            if self._running_dictionary["pass"].lower().strip()!="yes":
+                plan = self.start_thread("Replan",['input','tasks','reason'])
                 self.run_thread(plan)
-                modify_dictionary = ModifyDictionary(running_dictionary) 
-                modify_dictionary.collapse_dictionary_item("tasks","task")
+                modify_dictionary = ModifyDictionary(self._running_dictionary) 
+                self._running_dictionary['tasks'] = modify_dictionary.get_items("task")
         
         return None
     
@@ -86,6 +98,6 @@ if __name__ == '__main__':
     llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=3000)  
     filepath = "file1.html"
     
-    p = planner(running_dictionary,count_recurse,llm,filepath)
+    p = planner(running_dictionary,count_recurse,llm,filepath,True)
     p.plan()
     print(p._running_dictionary)
