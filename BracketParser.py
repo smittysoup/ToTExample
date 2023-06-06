@@ -1,91 +1,68 @@
 import re
 class BracketParser():
     def __init__(self,output:str):
-        self._text = output       
-        self._lines = self._text.split('\n')
+        self._text = output.strip() 
         
     def parse(self):
-        pattern_key = r'\[?(?P<key>.+?)\]?:'
-        pattern_value = r'(?P<value>.*)'
-        text = self._text.strip()
+        '''this parser will capture any text that is between the first set of brackets
+        then it will capture any text that is after the first set of brackets.  The text position is used to 
+        extract the key and value from the text.  The key is the text between the brackets and the value is the text'''
+        pattern_key = r'\[(?P<key>[^\]]+)\]:?'
+        text = self._text
         data_dict = {}
+        
+        #start parsing text
         while text:
+            #look for the first set of brackets in the text string
             key_match = re.search(pattern_key, text)
+            
             if key_match:
-                text = text[key_match.end():].strip()
-                value_match = re.search(pattern_value, text)
-                if key_match.group('key').lower().strip()=='sequence of steps to complete output':
-                    next_key_match = re.search(pattern_key, text)
+                #clean the text - lower case, strip, replace spaces with underscores
+                dkey = key_match.group('key')
+                key_val = self.clean(dkey)
+                
+                #create a new text string with everything following the key
+                new_text = text[key_match.end():].strip()
+                
+                #check if there was any text after the key
+                # if so, check if there is another key, add text until the new key is found 
+                # if not, add the remaining text to the value
+                if new_text:                    
+                    next_key_match = re.search(pattern_key, new_text)
+                    
                     if next_key_match:
-                        value_match_str = text[:next_key_match.start()].lower().strip()
-                        value_match_str = value_match_str.lower().strip()
-                    else: 
-                        value_match_str = text
-                else:   
-                    value_match_str = value_match.group('value').lower().strip()
-                if value_match_str:
-                    new = {key_match.group('key').lower().strip(): value_match_str}
-                    data_dict = dict(data_dict, **new)
-                    if key_match.group('key').lower().strip()=='sequence of steps to complete output':
-                        if next_key_match:
-                            text = text[next_key_match.start():].strip()
-                        else: 
-                            text = None
-                    else: 
-                        text = text[value_match.end():].strip()
+                        value_match = new_text[:next_key_match.start()]
+                    else:
+                        value_match = new_text
                         
-            else: 
-                '''If there is no key, then the value is the output to avoid an infinite loop'''
-                if text:
-                    new = {'output': text}
-                    data_dict = dict(data_dict, **new)
+                else: 
+                    value_match = 'Unable to get any value for key from parser!!'
+                    
+                #add the key and value to the dictionary
+                new_entry = {key_val: value_match}
+                data_dict = dict(data_dict, **new_entry)
+                
+                #reset text to the remaining text
+                if len(new_text) > len(value_match)+1:
+                    text = text[len(value_match):]
+                else:
                     text = None
+                
+            #handle cases where no key is found
+            else: 
+                print("No Key Found in text to parse!!")
+                text = None #exit loop
+                
         return data_dict
+    
+    def clean(self, text,opt=1):
+        text = text.lower()
+        text = text.strip()
+        if opt==1:
+            text = text.replace(" ","_")
+        return text
 
         
-    def split_parse(self):
-        '''
-        old
-        '''
-        data_dict={}
-        current_key=None
-        for line in self._lines:
-            stripped_line = line.strip()
-            if stripped_line:
-                lines = stripped_line.split(': ')
-                for line in lines:
-                    stripped_line = line.strip()
-                    if stripped_line.startswith('[') and stripped_line.endswith(']'):
-                        # If the line is a section title, remove the brackets and colon and set it as the current key
-                        current_key = stripped_line[1:-1]
-                    elif current_key is not None:
-                        # If the line is not a section title and a current key is set, add the line's content to the dictionary under the current key
-                        data_dict[current_key.lower()] = stripped_line
-                        #reset key
-                        current_key = None
-        return data_dict
-    
-    def get_tasks(dictionary):
-        task_list = []
-        for key, value in dictionary.items():
-            if 'task' in key.lower():
-                task_list.append(f"{key}: {value}")
-        return task_list
-    
-    def get_criteria(dictionary):
-        task_list = []
-        for key, value in dictionary.items():
-            if 'criteria' in key.lower():
-                task_list.append(f"{key}: {value}")
-        return task_list
-    
-    def get_designs(dictionary):
-        task_list = []
-        for key, value in dictionary.items():
-            if 'output' in key.lower():
-                task_list.append(f"{key}: {value}")
-        return task_list
-    
     
 
 
