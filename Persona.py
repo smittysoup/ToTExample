@@ -114,10 +114,18 @@ class Persona():
                     The system has been working on a job based on the goals and success criteria below:\n
                     [OUTPUT]:{webpage_code}\n
                     [GOAL]:{goal}\n
-                    [SUCCESS CRITERIA]:{criteria}\n\n
+                    [SUCCESS CRITERIA]:{success_criteria}\n\n
+                    [REQUIRED COMPONENTS]:{components}\n\n
+                    [OUTPUT FORMAT]:{output_format}\n\n
                     
-                    if the code meets all of the criteria specified, return [CODE PASS]: Yes, and explain why the code passed.  
-                    If the code does not meet all of the criteria specified, return [CODE PASS]: No, and explain why the code didn't pass. \n
+                    Review the output against the requirements, carefully and step by step.  
+                    1. Does the output meet all of the success criteria listed above? \n
+                    2. Are all the components present in the output? \n
+                    3. Is the output in the correct format? \n\n
+                    
+                    if the code meets all requirements specified, return [CODE PASS]: Yes, and explain why the code passed.  
+                    If the code does not meet all of the criteria specified, return [CODE PASS]: No, and explain why the code didn't pass. 
+                    The explanation you provide will be used as feedback to iteratively improve the output, so make sure you are specific and clear about what is missing.\n
                     Your response should be labeled and formatted as shown below: \n\n
                             [CODE PASS]: \n
                             [CODE PASS REASON]:   

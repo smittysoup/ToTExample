@@ -7,7 +7,7 @@ class BracketParser():
         '''this parser will capture any text that is between the first set of brackets
         then it will capture any text that is after the first set of brackets.  The text position is used to 
         extract the key and value from the text.  The key is the text between the brackets and the value is the text'''
-        pattern_key = r'\[(?P<key>[^\]]+)\]:?'
+        pattern_key = r'\[(?P<key>[A-Za-z0-9\s]+)\]:?'
         text = self._text
         data_dict = {}
         
@@ -30,7 +30,7 @@ class BracketParser():
                 if new_text:                    
                     next_key_match = re.search(pattern_key, new_text)
                     
-                    if next_key_match:
+                    if next_key_match and key_val != "puppeteer_script" and key_val != "webpage_code":
                         value_match = new_text[:next_key_match.start()]
                     else:
                         value_match = new_text

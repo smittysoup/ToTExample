@@ -16,21 +16,21 @@ class executor(Agent):
             self._llm.max_tokens = 2000
             code = self.start_thread("Fix Code",['webpage_code','webpage_errors'])
             self.run_thread(code,1)
-            if self._running_dictionary["webpage_code"] != ea.read_code_from_file(self.filepath):
+            if self._running_dictionary["webpage_code"] != ea.read_code_from_file(self._filepath):
                 self.check_code()
             else:
                 self._running_dictionary["webpage_errors"] = ""
         
     def check_code(self):
         self._llm.max_tokens = 3000
-        self._running_dictionary["webpage_code"] = ea.lint(self.filepath)
+        self._running_dictionary["webpage_code"] = (r"<!DOCTYPE html><html>"+ea.lint(self._filepath)+r"</html>")
         puppeteer = self.start_thread("Test Code",['webpage_code'])
         self.run_thread(puppeteer,2)
-        stderr = ea.check_page_with_puppeteer(self.filepath)
+        stderr = ea.check_page_with_puppeteer(self._filepath)
         self._running_dictionary["webpage_errors"] = stderr
     
     def sign_off_code(self):
-        approve_code = self.start_thread("Approve Deliverable",['webpage_code','criteria','goal'])
+        approve_code = self.start_thread("Approve Deliverable",['webpage_code','success_criteria','goal','output_format','components'])
         self.run_thread(approve_code)
         if self._running_dictionary["code_pass"].lower()!="yes":
             executor = self.start_thread("Recode",['webpage_code','code_pass_reason'])

@@ -71,10 +71,10 @@ class Agent(Persona):
             self._running_dictionary = dict(self._running_dictionary,**result)
             return self._running_dictionary
         if type==1:
-            ea.save_code_to_file(result,"file"+self._filepath)
+            ea.save_code_to_file(list(result.values())[0],self._filepath)
             return None
         else:
-            ea.save_code_to_file(result,"puppeteer_script.js")
+            ea.save_code_to_file(list(result.values())[0],"puppeteer_script.js")
             return None
     
 # The main execution of the program
