@@ -1,9 +1,17 @@
 dictionary = (
     {  
- 'input': '''create a website that has a left navigation menu with a library of chats and a main page that has a chat box. \n                        there should be a button to send chats and space to see responses along with the chat history with a timestamp. \n                        There should also be a button to save the chat, at which point it is added to the list on the left navigation. \n                        The color scheme should remind me of a forest on a sunny summer day''',
+ 'input': '''create a dynamic, modern, interactive website.  The purpose of the website is to allow a user to 
+ have a dynamic chat with a large language model, save chat history, and reload prior chats to continue conversations as needed. \n
+ The main page should be divided into two sections.  The left navigation, which will contain a history of previous chats, and the main page, which will be split into two horizontal halves.\n
+The top half of the main page will display text from an article that the user will read and scroll through.  The text from the article will be interactive, and the user should be able to highlight and right click into the text and see a menu of options.  The menu should include the following: summarize section, ask a question, suggest a topic\n
+The bottom half of the main page will be dynamically generated text based on the actions selected in the top half. if the user selects summarize, the bottom half will append text to an existing text box.  If the user selects "ask a question" a chat window will appear with a submit button.  If the user selects suggest a topic, a dynamic pane will appear on the right with a list of clickable topics.  Whatever is clicked will generate a prompt to the LLM for more information. \n
+ There should also be an icon at the top right of the main page to save the chat, at which point it is added to the list on the left navigation. \n
+ if the user selects a saved chat from the left nav, that chat should appear in the main page window as described above.  \n
+ The color scheme should remind me of a forest on a sunny summer day''',
  'n': 3, 
  'pass': 'Yes\n', 
  'webpage_errors': '', 
+ 'previous_work': None,
  'webpage_code': 'code', 
  'code_pass': 'code_pass', 
  'code_pass_reason': 'code_pass_reason', 

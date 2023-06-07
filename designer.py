@@ -27,6 +27,7 @@ class designer(Agent):
         design_plan = self.start_thread("Design Plan",['output','criteria'])
         self.run_thread(design_plan)
         e = executor(self._running_dictionary,self._llm,self._filepath)
+        e.execute()
         
         
     

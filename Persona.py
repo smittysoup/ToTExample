@@ -53,17 +53,17 @@ class Persona():
                     
                     The AI System has a planner that thinks about tasks, a designer that comes up with options to complete the task, and an executor who creates task outputs. \n
                     Your main goal is: {goal} \n\n
-                    the success criteria for this goal are: {criteria} \n\n
+                    the success criteria for this project are: {criteria} \n\n
                     
                     The planner has created a list of tasks that you have approved.  First think about the list of tasks, then think about the current task in the list, exactly as described. \n
                     All Tasks: {tasks}\n
                     Current Task: {current_task}\n\n
                     
-                    Refine your goal to account for the tasks that are either before your task, after your task, or both. Assume that the AI system will complete all of the tasks in the list,
+                    create a new goal, which is a smaller sub-goal, for the current task in your list.  Account for any work that should be done before your task, after your task, or both. Assume that the AI system will complete all of the tasks in the list,
                     and that you will be able to use the outputs of the tasks that come before your task to complete your goal.  
                     Also assume that the completion of your current tasks should be handed off to the AI to complete the next task.
                     Make sure these assumptions are added as success criteria to your goal. \n\n
-                    Make any modifications or additions to your goal needed to take into account this new information.  \n\n  Your output be labeled and formatted as shown below: \n\n
+                    Write your new goal and new success criteria for this smaller goal.  \n\n  Your output be labeled and formatted as shown below: \n\n
                         [GOAL]:\n
                         [SUCCESS CRITERIA 1]:\n
                         [SUCCESS CRITERIA 2]:\n
@@ -207,16 +207,16 @@ class Persona():
                     
         if template_name == "Write Code":
             result = '''You are a skilled web developer.  Your designer has provided you with a specification for a webpage. \n
-                    use the requirements below to produce webpage code that meets the success criteria.  Your response should be coded using HTML, CSS and Javascript as needed. \n\n
+                    use the requirements below to produce webpage code that meets the success criteria. \n\n
                     [OUTPUT]:{output}\n
-                    [SUCCESS CRITERIA]:{criteria}\n\n
-                    
-                    Format the above output into a specification document.  Return a response in the following format:\n
-                    [TITLE]:{title}\n
+                    [SUCCESS CRITERIA]:{success_criteria}\n\n
                     [SUMMARY]:{summary}\n
                     [OUTPUT FORMAT]:{output_format}\n
                     [COMPONENTS]:{components}\n
                     [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:{sequence_of_steps_to_complete_output}\n
+                    
+                    You may also have completed previous work on this task.  If so, you can use the previous work to help you complete this task. \n
+                    [PREVIOUS WORK]:{previous_work}\n\n
                     
                     Use the placeholder http://www.test.com for any hyperlinks. \n Comment out any code that would link to resources such as image files that don't currently exist in your context. \n
                     Your response should be labeled and formatted as shown below.  You must include the label for the [WEBPAGE CODE]: \n

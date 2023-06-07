@@ -43,15 +43,17 @@ class planner(Agent):
                 self._dictionaries[str(self.count_recurse)] = self._running_dictionary
                 self._running_dictionary["input"]=task
                 self._count_recurse +=1
+                self._filepath = "file"+self._count_recurse+".html"
                 self.recurse_plan()
             else: 
                 if self._test:
                     print(self._running_dictionary)
                 else:
+                    self._running_dictionary["input"]=task
                     d = designer(self._running_dictionary,self._llm,self._filepath)                
                     d.design()
                 
-            return None
+            return self._running_dictionary
     
     def create_plan(self,**kwargs):
         plan = self.start_thread("Plan",["input"])
@@ -96,7 +98,7 @@ if __name__ == '__main__':
     from langchain import OpenAI
     running_dictionary = test_dictionary.dictionary
     count_recurse = 1
-    llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=3000)  
+    llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=2000)  
     filepath = "file1.html"
     
     p = planner(running_dictionary,count_recurse,llm,filepath)

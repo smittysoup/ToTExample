@@ -14,7 +14,6 @@ class executor(Agent):
     def correct_errors(self):
         err_count = 0
         while err_count < 1:
-            self._llm.max_tokens = 2000
             code = self.start_thread("Fix Code",['webpage_code','webpage_errors'])
             self.run_thread(code,1)
             if self._running_dictionary["webpage_code"] != ea.read_code_from_file(self._filepath):
@@ -23,7 +22,6 @@ class executor(Agent):
             err_count += 1
         
     def check_code(self):
-        self._llm.max_tokens = 3000
         self._running_dictionary["webpage_code"] = ea.lint(self._filepath)
         puppeteer = self.start_thread("Test Code",['webpage_code'])
         self.run_thread(puppeteer,2)
@@ -39,9 +37,10 @@ class executor(Agent):
             self.test()
     
     def execute(self):
-        code = self.start_thread("Write Code",['output','criteria','title','summary','output_format','components','sequence_of_steps_to_complete_output'])
+        code = self.start_thread("Write Code",['output','success_criteria','summary','output_format','components','sequence_of_steps_to_complete_output','previous_work'])
         self.run_thread(code,1)
         self.test()
+        self._running_dictionary["previous_work"] = self._running_dictionary["webpage_code"]
     
     def test(self):
         self.check_code()
