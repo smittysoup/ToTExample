@@ -218,6 +218,7 @@ class Persona():
                     [COMPONENTS]:{components}\n
                     [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:{sequence_of_steps_to_complete_output}\n
                     
+                    Use the placeholder http://www.test.com for any hyperlinks. \n Comment out any code that would link to resources such as image files that don't currently exist in your context. \n
                     Your response should be labeled and formatted as shown below.  You must include the label for the [WEBPAGE CODE]: \n
                     [WEBPAGE CODE]: <YOUR HTML CODE...>\n
 
@@ -238,10 +239,11 @@ class Persona():
                     This script would need to do the following: \n
                     1. require the puppeteer library.\n
                     2. Get the path to the generated page from the command line arguments, specifically process.argv[2].\n
-                    3. Load the generated page.\n
-                    4. Interact with the page as needed to test any form input fields.  If there are no fields, do not test them.\n
-                    5. Evaluate any JavaScript on the page to check for errors.\n
-                    6. log any errors to the console. \n
+                    3. convert the path to a file://, as it is a local path in the current working directory.  \n
+                    4. Load the generated page.\n
+                    5. Interact with the page as needed to test any form input fields.  If there are no fields, do not test them.\n
+                    6. Evaluate any JavaScript on the page to check for errors.\n
+                    7. log any errors to the console. \n
                     
                     Here is the HTML Page you will be testing: \n
                     {webpage_code}\n\n
