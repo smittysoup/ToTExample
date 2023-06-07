@@ -1,6 +1,7 @@
 from NodeRunner import Agent
 from ModifyDictionary import ModifyDictionary
 from queue import Queue
+from executor import executor
 
 class designer(Agent):
     def __init__(self,running_dictionary,llm,filepath):
@@ -25,6 +26,9 @@ class designer(Agent):
         self._running_dictionary["output"] = self._running_dictionary[key_text]
         design_plan = self.start_thread("Design Plan",['output','criteria'])
         self.run_thread(design_plan)
+        e = executor(self._running_dictionary,self._llm,self._filepath)
+        
+        
     
 if __name__ == '__main__':
     import openai, os, test_dictionary

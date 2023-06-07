@@ -197,7 +197,7 @@ class Persona():
 
                     '''   
                     
-        if template_name == "Code":
+        if template_name == "Write Code":
             result = '''You are a skilled web developer.  Your designer has provided you with a specification for a webpage. \n
                     use the requirements below to produce webpage code that meets the success criteria.  Your response should be coded using HTML, CSS and Javascript as needed. \n\n
                     [OUTPUT]:{output}\n
@@ -210,7 +210,7 @@ class Persona():
                     [COMPONENTS]:{components}\n
                     [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:{sequence_of_steps_to_complete_output}\n
                     
-                    Your response should be labeled and formatted as shown below: \n
+                    Your response should be labeled and formatted as shown below.  You must include the label for the [WEBPAGE CODE]: \n
                     [WEBPAGE CODE]: <YOUR HTML CODE...>\n
 
                     '''   
@@ -262,7 +262,7 @@ class Persona():
                 template=(string_template)
                 )
         
-        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks")      
+        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks",verbose=True)      
         return(eval_plan_chain)
     
  

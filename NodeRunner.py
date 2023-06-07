@@ -1,6 +1,6 @@
 # Importing required modules and classes
 from langchain import OpenAI
-import openai, os, threading, test_input, BracketParser as b
+import openai, os, threading, BracketParser as b, test_dictionary
 from queue import Queue
 from ModifyDictionary import ModifyDictionary
 from Persona import Persona
@@ -79,76 +79,15 @@ class Agent(Persona):
     
 # The main execution of the program
 if __name__ == '__main__':
-    # variables for testing
+
+    openai.api_key=os.getenv("OPENAI_API_KEY")
+    from langchain import OpenAI
+    running_dictionary = test_dictionary.dictionary
     llm = OpenAI(model_name="text-davinci-003", temperature=0) 
-    dictionary_sample = {
-        "input": test_input.input,
-        "output": "output option 2: the ai will use the write code tool to create a webpage with a left navigation menu. the ai will use the internet search tool to find existing webpages with a left navigation menu that are aesthetically pleasing, functional, and optimized for mobile devices and seo. the ai will then use the write code tool to create a webpage with a left navigation menu based on the existing webpages. the ai will also use the write documentation tool to create detailed instructions on how to use the webpage and left navigation menu. the deliverable will be a webpage with a left navigation menu and accompanying documentation.",
-        "goal": "make webpage",
-        "tools": "write code",
-        "criteria": '''
-            success criteria 1: the webpage should be aesthetically pleasing.
-            success criteria 2: the left navigation menu should be functional and easy to use.
-            success criteria 3: the webpage should be optimized for mobile devices.
-            success criteria 4: the webpage should be optimized for search engine optimization (seo).
-        ''',
-        "n":str(5),
-        'webpage_code': '''<!DOCTYPE html>
-        <html>
-            <head>
-                <title>Website with Left Navigation Menu</title>
-                <style>
-                    /* CSS styling for the left navigation menu */
-                    #left-nav {
-                        position: fixed;
-                        width: 200px;
-                        height: 100%;
-                        background-color: #f1f1f1;
-                    }
-                    #left-nav ul {
-                        list-style-type: none;
-                        padding: 0;
-                    }
-                    #left-nav li {
-                        padding: 8px;
-                    }
-                    #left-nav a {
-                        text-decoration: none;
-                        color: #000;
-                    }
-                    #left-nav a:hover {
-                        background-color: #555;
-                        color: #fff;
-                    }
-                </style>
-            </head>
-            <body>
-                <div id="left-nav">
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Services</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <script>
-                    // Javascript code to make the left navigation menu functional
-                    const leftNav = document.getElementById('left-nav');
-                    leftNav.addEventListener('click', (e) => {
-                        const target = e.target;
-                        if (target.tagName === 'A') {
-                            const href = target.getAttribute('href');
-                            window.location.href = href;
-                        }
-                    });
-                </script>
-            </body>
-        </html>'''
-        } #will be passed from KS
 
     # Create an instance of NodeSupervisor with the instantiated OpenAI model and the sample dictionary
 
-    ns = NodeRunner(llm, dictionary_sample,"Test Code",['webpage_code'])
+    ns = Agent(llm, running_dictionary,"Test Code",['webpage_code'])
     thread = ns.start_thread()   # Starting the thread
     thread.join #waiting for thread to finish
     print(ns.queue.get()) #printing Results
