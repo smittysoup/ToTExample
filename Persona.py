@@ -237,10 +237,12 @@ class Persona():
         if template_name == "Test Code":
             result = '''You are a skilled web developer.  You have already created an HTML script and will now create a separate Node.js script to use Puppeteer to test your code. 
                     This script would need to do the following: \n
-                    1. require the puppeteer library.\n
+                    1. require libraries for puppeteer and path.\n
                     2. Get the path to the generated page from the command line arguments, specifically process.argv[2].\n
-                    3. convert the path to a file://, as it is a local path in the current working directory.  \n
+                    3. convert the path to a file://, as it is a local path in the current working directory. 
+                       - make sure you get the cwd for the path at runtime, for example: path.resolve(process.cwd(), pagePath)\n
                     4. Load the generated page.\n
+                    4.1 add headless mode to the launch command: const browser = await puppeteer.launch({ headless: "new" });\n
                     5. Interact with the page as needed to test any form input fields.  If there are no fields, do not test them.\n
                     6. Evaluate any JavaScript on the page to check for errors.\n
                     7. log any errors to the console. \n
@@ -248,6 +250,7 @@ class Persona():
                     Here is the HTML Page you will be testing: \n
                     {webpage_code}\n\n
                     
+                    after you create the code for puppeteer, review the script.  Make sure that it is well formed and will run without any errors.  Add error handling if needed.  Correct any errors you find before returning the script.
                     Your response should be labeled and formatted as shown below: \n
                     [PUPPETEER SCRIPT]: (your script goes here...)\n'''
                     

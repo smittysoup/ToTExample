@@ -57,6 +57,7 @@ def lint(filepath):
     code = read_code_from_file(filepath)
     dtree = html_linter(code)
     code = serialize_tree(dtree)
+    code = r"<!DOCTYPE html><html>"+code+r"</html>"
     save_code_to_file(code,filepath)
     return code
 
