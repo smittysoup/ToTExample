@@ -26,7 +26,7 @@ class planner(Agent):
         
     def recurse_plan(self):
         
-
+        self._task_count = 0
         if self._count_recurse>1:
             self.create_plan()
             self.sign_off_plan()
@@ -35,7 +35,6 @@ class planner(Agent):
             
             self._task_count +=1
             dynamic_label = "task" + str(self._task_count) + " subtask" + str(self._count_recurse)
-            self._dictionaries[dynamic_label] = self._running_dictionary
             self._filepath = "file"+dynamic_label+".html"
             self._running_dictionary["current_task"] = task
             approve_task = self.start_thread("Evaluate Task",['tasks','current_task'])
@@ -63,6 +62,9 @@ class planner(Agent):
                     self._running_dictionary["input"]=task
                     d = designer(self._running_dictionary,self._llm,self._filepath)                
                     d.design()
+                    e = executor(self._running_dictionary,self._llm,self._filepath)
+                    e.execute()
+                    self._dictionaries[dynamic_label] = self._running_dictionary
                 
         return self._running_dictionary
     
