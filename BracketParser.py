@@ -10,12 +10,14 @@ class BracketParser():
         pattern_key = r'\[(?P<key>[A-Za-z0-9\s]+)\]:?'
         text = self._text
         data_dict = {}
+        loop_count=0
         
         #start parsing text
-        while text:
+        while text and loop_count <20:
             #look for the first set of brackets in the text string
             key_match = re.search(pattern_key, text)
             print("searching for key in text: "+text)
+            loop_count +=1
             
             if key_match:
                 #clean the text - lower case, strip, replace spaces with underscores

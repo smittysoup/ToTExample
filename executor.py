@@ -14,7 +14,7 @@ class executor(Agent):
     def correct_errors(self):
         err_count = 0
         while err_count < 1:
-            code = self.start_thread("Fix Code",['code_file','code_errors'])
+            code = self.start_thread("Fix Code",['code_files','code_errors'])
             self.run_thread(code,1)
             if self._running_dictionary["code_file"] != ea.read_code_from_file(self._filepath):
                 self.check_code()
@@ -23,25 +23,28 @@ class executor(Agent):
         
     def check_code(self):
         self._running_dictionary["code_file"] = ea.lint(self._filepath)
-        puppeteer = self.start_thread("Test Code",['code_file'])
+        puppeteer = self.start_thread("Test Code",['code_files'])
         self.run_thread(puppeteer,2)
         stderr = ea.check_page_with_puppeteer(self._filepath)
         self._running_dictionary["code_errors"] = stderr
         return None
     
     def sign_off_code(self):
-        approve_code = self.start_thread("Approve Deliverable",['code_file','criteria','goal','output_format','components'])
+        approve_code = self.start_thread("Approve Deliverable",['code_files','criteria','goal','output_format','components'])
         self.run_thread(approve_code)
         if self._running_dictionary["code_pass"].lower().strip()!="yes":
-            executor = self.start_thread("Recode",['code_file','code_pass_reason'])
+            executor = self.start_thread("Recode",['code_files','code_pass_reason'])
             self.run_thread(executor,1)            
             self.test()
     
     def execute(self):
         code = self.start_thread("Write Code",['output','summary','output_format','components','sequence_of_steps_to_complete_output','previous_work'])
         self.run_thread(code,1)
+        modify_dictionary = ModifyDictionary(self._running_dictionary) 
+        self._running_dictionary['code_files'] = []
+        self._running_dictionary['code_files'] = modify_dictionary.get_items("code_file")
         self.test()
-        self._running_dictionary["previous_work"] = self._running_dictionary["code_file"]
+        self._running_dictionary["previous_work"] = self._running_dictionary["code_files"]
         return self._running_dictionary
     
     def test(self):

@@ -26,10 +26,10 @@ class Agent(Persona):
     def _check_label(self,task,result):
         result = result.strip()
         if task == "Write Code":
-            if result.startswith("[WEBPAGE CODE]:"):
+            if result.startswith("[CODE"):
                 return self._parse(result)
             else:
-                return self._parse("[WEBPAGE CODE]: " + result)
+                return self._parse("[CODE FILE]: " + result)
         elif task == "Test Code":
             if result.startswith("[PUPPETEER SCRIPT]:"):
                 return self._parse(result)

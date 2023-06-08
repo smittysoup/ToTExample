@@ -113,7 +113,7 @@ class Persona():
                         monitor the work done by the AI system to ensure goals are met.  \n\n
                     
                     The system has been working on a job based on the goals and success criteria below:\n
-                    [OUTPUT]:{code_file}\n
+                    [OUTPUT]:{code_files}\n
                     [GOAL]:{goal}\n
                     [SUCCESS CRITERIA]:{criteria}\n\n
                     [REQUIRED COMPONENTS]:{components}\n\n
@@ -229,7 +229,7 @@ class Persona():
                     '''   
         if template_name == "Recode":
             result = '''You are a skilled web developer and have just finished reviewing a new webpage with your supervisor.  Your supervisor has rejected your code based on the reasons listed below. 
-                    webpage: {code_file}\n\n
+                    webpage: {code_files}\n\n
                     reason for rejection: {code_pass_reason}\n\n
                                         
                     fix the issues in your code and return the corrected code.\n
@@ -256,14 +256,14 @@ class Persona():
                     7. log any errors to the console. \n
                     
                     Here is the HTML Page you will be testing: \n
-                    {code_file}\n\n
+                    {code_files}\n\n
                     
                     Your response should be labeled and formatted as shown below: \n
                     [PUPPETEER SCRIPT]: (your script goes here...)\n'''
                     
         if template_name == "Fix Code":
             result = '''You are a skilled web developer and have just finished testing a new webpage.  The webpage render returned the below error messages. 
-                    webpage: {code_file}\n\n
+                    webpage: {code_files}\n\n
                     errors: {code_errors}\n\n
                                         
                     fix the errors in your code and return the corrected code. If the errors are due to links not working, you can assume that the links are placeholders and will be corrected in the final version. \n\n
