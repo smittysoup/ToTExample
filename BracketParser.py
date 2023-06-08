@@ -1,4 +1,4 @@
-import re
+import re, colorama
 class BracketParser():
     def __init__(self,output:str):
         self._text = output.strip() 
@@ -53,7 +53,7 @@ class BracketParser():
                 
             #handle cases where no key is found
             else: 
-                print("No Key Found in text to parse!!")
+                print(colorama.Fore.RED + "No Key Found in text to parse!!")
                 text = None #exit loop
                 
         return data_dict

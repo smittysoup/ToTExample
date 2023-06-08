@@ -5,6 +5,7 @@ from queue import Queue
 from ModifyDictionary import ModifyDictionary
 from Persona import Persona
 import ExecutorAgent as ea
+import colorama
 
 # Setting the OpenAI API key from the environment variables
 openai.api_key=os.getenv("OPENAI_API_KEY")
@@ -52,12 +53,14 @@ class Agent(Persona):
         # Execute the chain of tasks on the filtered dictionary
         chain = self.get_prompt_chain(items_list, task)        
         response = chain.generate([filtered_dictionary])
+        print(colorama.Style.RESET_ALL)
         print("Tokens Used: " + str(response.llm_output["token_usage"]["total_tokens"])+ "\n")
         # Parse the response to create a structured output
         validate = self._check_label(task,response.generations[0][0].text)
-        if validate == "Invalid task" and self._retry_count<3:
+        if validate == "Invalid task" and self._retry_count<5:
             self._retry_count +=1
-            print("failed to get valid result...retrying " + str(self._retry_count))
+            print(colorama.Fore.RED + "failed to get valid result...retrying " + str(self._retry_count)+"\n\n")
+            print(colorama.Fore.RED + response.generations[0][0].text)
             self._generate(task, items_list)
         return None
     
@@ -69,14 +72,14 @@ class Agent(Persona):
         output = b.BracketParser(result)      
         parsed_output = output.parse()
         for k in parsed_output:
-            print(k + ": " + parsed_output[k] + "\n")
+            print(colorama.Fore.GREEN + k + ": " + parsed_output[k] + "\n")
         # Put the parsed output dictionary into the queue
         self.queue.put(parsed_output)
         return None
 
     def start_thread(self,task, items_list):
         # Create and start a new thread for the supervise method
-        print(f"Starting a new thread for {task} with {items_list}")
+        print(colorama.Fore.BLUE + f"Starting a new thread for {task} with {items_list}")
         thread = threading.Thread(
             target=self._generate,
             args=(task, items_list)
