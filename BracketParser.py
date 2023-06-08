@@ -30,7 +30,7 @@ class BracketParser():
                 if new_text:                    
                     next_key_match = re.search(pattern_key, new_text)
                     
-                    if next_key_match and key_val != "puppeteer_script" and key_val != "webpage_code":
+                    if next_key_match and key_val != "puppeteer_script" and (key_val != "code_file_1" or key_val != "code_file_2" or key_val != "code_file_3"):
                         value_match = new_text[:next_key_match.start()]
                     else:
                         value_match = new_text

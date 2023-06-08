@@ -18,7 +18,7 @@ class Persona():
                         
                         Evaluate the task.  What is the overarching goal that the AI system needs to meet to complete this task?
                         Describe the goal including a discrete list of success criteria.  The success criteria will be used to evaluate whether or not the AI system is successful in completing the task.\n
-                        Your output be labeled and formatted as shown below: \n\n
+                        Your response should be labeled and formatted as shown below.  Make sure that you use square brackets to delineate each part of the response: \n\n
                         [GOAL]:\n
                         [SUCCESS CRITERIA 1]:\n
                         [SUCCESS CRITERIA 2]:\n
@@ -34,8 +34,9 @@ class Persona():
                         Evaluate the AI's tasks against the following criteria:  \n
                             1. each sub-task is discrete with logical steps that can be accomplished by a Large Language Model AI.
                             2. each sub-task is literal and specific.  There is sufficient detail in the task that there is no room for interpretation on what is required.
-                            3. A sub-task is big enough to be evaluated coherently but small enough to fit into a single prompt to an LLM. 
-                            4. In total, completion of the sub-tasks will meet your projects success criteria:\n
+                            3. each sub-task can be encapsulated in a single modular output that can be combined with other outputs. 
+                            4. A sub-task is big enough to be evaluated coherently but small enough to fit into a single prompt to an LLM. 
+                            5. In total, completion of the sub-tasks will meet your projects success criteria:\n
                                  {criteria}\n
                                 \n
                         [USER TASK]: {goal}
@@ -51,18 +52,15 @@ class Persona():
             result = '''You are a the supervisor of a sophisticated AI system based on a large language model. As the supervisor, your job is to
                         monitor the work done by the AI system to ensure goals are met.  \n\n
                     
-                    The AI System has a planner that thinks about tasks, a designer that comes up with options to complete the task, and an executor who creates task outputs. \n
-                    Your main goal is: {goal} \n\n
+                    Your project is: {goal} \n\n
                     the success criteria for this project are: {criteria} \n\n
                     
-                    The planner has created a list of tasks that you have approved.  First think about the list of tasks, then think about the current task in the list, exactly as described. \n
+                    Think about the list of tasks for the project, then think about the current task in the list. \n
                     All Tasks: {tasks}\n
                     Current Task: {current_task}\n\n
                     
-                    create a new goal, which is a smaller sub-goal, for the current task in your list.  Account for any work that should be done before your task, after your task, or both. Assume that the AI system will complete all of the tasks in the list,
-                    and that you will be able to use the outputs of the tasks that come before your task to complete your goal.  
-                    Also assume that the completion of your current tasks should be handed off to the AI to complete the next task.
-                    Make sure these assumptions are added as success criteria to your goal. \n\n
+                    Create a new goal for the current task in your list.  This goal must describe a deliverable that can be accomplished in on query to a large language model. 
+                    Assume that you will be able to use the outputs of the tasks that come before your task to complete your goal.  \n\n
                     Write your new goal and new success criteria for this smaller goal.  \n\n  Your output be labeled and formatted as shown below: \n\n
                         [GOAL]:\n
                         [SUCCESS CRITERIA 1]:\n
@@ -78,7 +76,10 @@ class Persona():
                     The AI System has a planner that thinks about tasks, a designer that comes up with options to complete the task, and an executor who creates task outputs. \n
                     The planner has created a list of tasks that you have approved.  Think about the list of tasks, then think about the current task in the list, exactly as described. 
                     Decide if the task should be further broken down into sub-tasks prior to handing it off to a designer.  A task should be broken down into sub-tasks 
-                    if the tasks would have multiple deliverables, require multiple processes, technologies or tools to complete, or lead to a response that is more than 2,000 words long. 
+                    if any of the following are true: 
+                    1. The tasks would have multiple deliverables
+                    2. The task would require multiple processes, technologies or tools to complete. 
+                    3. The task would lead to a response that is more than 2,000 words long. 
                     Make sure you are only considering the current task in the list, remembering that you will not need to make subtasks that are already in the plan.  
                     Make sure that you only consider what is literally listed in the task with the simplest interpretation possible, without making up any additional requirements.  \n\n
                     
@@ -114,7 +115,7 @@ class Persona():
                     The system has been working on a job based on the goals and success criteria below:\n
                     [OUTPUT]:{webpage_code}\n
                     [GOAL]:{goal}\n
-                    [SUCCESS CRITERIA]:{success_criteria}\n\n
+                    [SUCCESS CRITERIA]:{criteria}\n\n
                     [REQUIRED COMPONENTS]:{components}\n\n
                     [OUTPUT FORMAT]:{output_format}\n\n
                     
@@ -181,6 +182,7 @@ class Persona():
                     
                     Your job is to design {n} unique options for deliverables that a Large Language model could generate to satisfy the goal and success criteria of this task. Your supervisor will select from among these options to determine the final output. \n
                     - Each deliverable must be something that is achievable for an AI.  \n\n
+                    - Each deliverable must result in only one, modular output.  For example, if the task is to create a website, the output of your design can be a webpage or a python script, but not both.  
                     - Each deliverable should contain detailed information about the design of the deliverable.
                     - Each deliverable should be unique from the other deliverables. \n\n
                     Your response should be labeled and formatted as shown below: \n
@@ -199,17 +201,16 @@ class Persona():
                     [SUMMARY]:\n
                     [OUTPUT FORMAT]:\n
                     [COMPONENTS]:\n
-                    [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:\n
-                    [TOOLS AND THEIR USES]:\n                    
-                    [SUCCESS CRITERIA]:   \n          
+                    [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:\n     
 
                     '''   
                     
         if template_name == "Write Code":
-            result = '''You are a skilled web developer.  Your designer has provided you with a specification for a webpage. \n
-                    use the requirements below to produce [WEBPAGE CODE] that meets the success criteria.  You may also have completed previous work on this task.  If so, you can use the previous work to help you complete this task. \n\n
+            result = '''You are a skilled developer.  Your designer has provided you with a specification for a development task. \n
+                    Use the requirements below to produce code that meets the success criteria.  \n
+                    The code you output must be modular and concise, with liberal use of placeholder text, comments or links if required. \n
+                    You may also have completed previous work on this task.  If so, you can use the previous work to help you complete this task, either as a base input or as a reference to complete the task. \n\n
                     [OUTPUT]:{output}\n
-                    [SUCCESS CRITERIA]:{success_criteria}\n\n
                     [SUMMARY]:{summary}\n
                     [OUTPUT FORMAT]:{output_format}\n
                     [COMPONENTS]:{components}\n
@@ -219,8 +220,11 @@ class Persona():
                     Use the placeholder http://www.test.com for any hyperlinks. \n Comment out any code that would link to resources such as image files that don't currently exist in your context. \n
                     Your response should be labeled and formatted as shown below.\n\n
                     
-                    You must include the label for the [WEBPAGE CODE]: \n\n
-                    [WEBPAGE CODE]: (your code goes here...)\n
+                    You must include the label for the [CODE FILE] that you create.  If you have multiple different code files, due to multiple classes within a single language, or due to different languages or components needed for development, label each output as shown. \n\n
+                    [CODE FILE 1]: (your code goes here...)\n
+                    [CODE FILE 2]: (your code goes here...)\n
+                    .....
+                    [CODE FILE N]: (your code goes here...)\n
 
                     '''   
         if template_name == "Recode":
@@ -230,8 +234,12 @@ class Persona():
                                         
                     fix the issues in your code and return the corrected code.\n
                     if you are unable to fix the issues, return the original code. \n\n
-                    Your response should be labeled and formatted as shown below: \n
-                    [WEBPAGE CODE]: <YOUR HTML CODE...>\n
+                    You must include the label for the [CODE FILE] that you create.  If you have multiple different code files, due to multiple classes within a single language, or due to different languages or components needed for development, label each output as shown. \n\n
+                    [CODE FILE 1]: (your code goes here...)\n
+                    [CODE FILE 2]: (your code goes here...)\n
+                    .....
+                    [CODE FILE N]: (your code goes here...)\n
+
 
                     '''   
         if template_name == "Test Code":
@@ -250,19 +258,22 @@ class Persona():
                     Here is the HTML Page you will be testing: \n
                     {webpage_code}\n\n
                     
-                    after you create the code for puppeteer, review the script.  Make sure that it is well formed and will run without any errors.  Add error handling if needed.  Correct any errors you find before returning the script.
                     Your response should be labeled and formatted as shown below: \n
                     [PUPPETEER SCRIPT]: (your script goes here...)\n'''
                     
         if template_name == "Fix Code":
             result = '''You are a skilled web developer and have just finished testing a new webpage.  The webpage render returned the below error messages. 
-                    webpage: {webpage_code}\n\n
+                    webpage: {code_file}\n\n
                     errors: {webpage_errors}\n\n
                                         
                     fix the errors in your code and return the corrected code. If the errors are due to links not working, you can assume that the links are placeholders and will be corrected in the final version. \n\n
                     if you are unable to fix the errors, return the original code. \n\n
-                    Your response should be labeled and formatted as shown below: \n
-                    [WEBPAGE CODE]: <YOUR HTML CODE...>\n
+                    You must include the label for the [CODE FILE] that you create.  If you have multiple different code files, due to multiple classes within a single language, or due to different languages or components needed for development, label each output as shown. \n\n
+                    [CODE FILE 1]: (your code goes here...)\n
+                    [CODE FILE 2]: (your code goes here...)\n
+                    .....
+                    [CODE FILE N]: (your code goes here...)\n
+
 
                     '''   
         return result

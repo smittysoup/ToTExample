@@ -14,37 +14,39 @@ class executor(Agent):
     def correct_errors(self):
         err_count = 0
         while err_count < 1:
-            code = self.start_thread("Fix Code",['webpage_code','webpage_errors'])
+            code = self.start_thread("Fix Code",['code_file','webpage_errors'])
             self.run_thread(code,1)
-            if self._running_dictionary["webpage_code"] != ea.read_code_from_file(self._filepath):
+            if self._running_dictionary["code_file"] != ea.read_code_from_file(self._filepath):
                 self.check_code()
 
             err_count += 1
         
     def check_code(self):
-        self._running_dictionary["webpage_code"] = ea.lint(self._filepath)
-        puppeteer = self.start_thread("Test Code",['webpage_code'])
+        self._running_dictionary["code_file"] = ea.lint(self._filepath)
+        puppeteer = self.start_thread("Test Code",['code_file'])
         self.run_thread(puppeteer,2)
         stderr = ea.check_page_with_puppeteer(self._filepath)
         self._running_dictionary["webpage_errors"] = stderr
+        return None
     
     def sign_off_code(self):
-        approve_code = self.start_thread("Approve Deliverable",['webpage_code','success_criteria','goal','output_format','components'])
+        approve_code = self.start_thread("Approve Deliverable",['code_file','criteria','goal','output_format','components'])
         self.run_thread(approve_code)
         if self._running_dictionary["code_pass"].lower().strip()!="yes":
-            executor = self.start_thread("Recode",['webpage_code','code_pass_reason'])
+            executor = self.start_thread("Recode",['code_file','code_pass_reason'])
             self.run_thread(executor,1)            
             self.test()
     
     def execute(self):
-        code = self.start_thread("Write Code",['output','success_criteria','summary','output_format','components','sequence_of_steps_to_complete_output','previous_work'])
+        code = self.start_thread("Write Code",['output','summary','output_format','components','sequence_of_steps_to_complete_output','previous_work'])
         self.run_thread(code,1)
         self.test()
-        self._running_dictionary["previous_work"] = self._running_dictionary["webpage_code"]
+        self._running_dictionary["previous_work"] = self._running_dictionary["code_file"]
+        return self._running_dictionary
     
     def test(self):
-        self.check_code()
-        self.correct_errors()
+        #self.check_code()
+        #self.correct_errors()
         self.sign_off_code()    
         
     

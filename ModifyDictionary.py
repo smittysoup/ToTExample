@@ -4,9 +4,8 @@ class ModifyDictionary:
         self._running_dictionary = running_dictionary
             
     def delete_items(self,dkey):
-            for key in self._running_dictionary.keys():
-                if dkey in key.lower():
-                    del self._running_dictionary[key]
+        if self._running_dictionary[dkey]:
+            del self._running_dictionary[dkey]
             return self._running_dictionary
 
     def get_items(self,dkey):
@@ -18,7 +17,7 @@ class ModifyDictionary:
         task_list = []
         for key, value in self._running_dictionary.items():
             if dkey in key.lower():
-                task_list.append(f"{key}: {value}")
+                task_list.append(f"{value}")
         return task_list
 
     def filter_dict(self,keys):

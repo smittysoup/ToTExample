@@ -39,8 +39,15 @@ class planner(Agent):
             self._running_dictionary["current_task"] = task
             approve_task = self.start_thread("Evaluate Task",['tasks','current_task'])
             refine_goal = self.start_thread("Refine Goal",['tasks','criteria','goal','current_task'])
+            
             self.run_thread(approve_task)
             self.run_thread(refine_goal)
+            
+            modify_dictionary = ModifyDictionary(self._running_dictionary)  
+            self._running_dictionary['tasks'] = []
+            self._running_dictionary['tasks'] = modify_dictionary.get_items("task")    
+            self._running_dictionary['criteria'] = []
+            self._running_dictionary['criteria'] = modify_dictionary.get_items("criteria")
             
             if self._running_dictionary["task_pass"].lower().strip() !="yes":
                 '''
@@ -61,9 +68,9 @@ class planner(Agent):
                 else:
                     self._running_dictionary["input"]=task
                     d = designer(self._running_dictionary,self._llm,self._filepath)                
-                    d.design()
+                    self._running_dictionary = d.design()
                     e = executor(self._running_dictionary,self._llm,self._filepath)
-                    e.execute()
+                    self._running_dictionary = e.execute()
                     self._dictionaries[dynamic_label] = self._running_dictionary
                 
         return self._running_dictionary
@@ -76,8 +83,10 @@ class planner(Agent):
         self.run_thread(supervise)
         
         modify_dictionary = ModifyDictionary(self._running_dictionary)   
-        #collapse tasks and criteria to list variables        
-        self._running_dictionary['tasks'] = modify_dictionary.get_items("task")      
+        #collapse tasks and criteria to list variables
+        self._running_dictionary['tasks'] = []
+        self._running_dictionary['tasks'] = modify_dictionary.get_items("task")    
+        self._running_dictionary['criteria'] = []
         self._running_dictionary['criteria'] = modify_dictionary.get_items("criteria")
         
         return None
@@ -101,6 +110,7 @@ class planner(Agent):
                 plan = self.start_thread("Replan",['input','tasks','reason'])
                 self.run_thread(plan)
                 modify_dictionary = ModifyDictionary(self._running_dictionary) 
+                self._running_dictionary['tasks'] = []
                 self._running_dictionary['tasks'] = modify_dictionary.get_items("task")
         
         return None

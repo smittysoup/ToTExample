@@ -17,7 +17,8 @@ class designer(Agent):
         '''
         design_options = self.start_thread("Design",['input','goal','criteria','n'])
         self.run_thread(design_options)
-        modify_dictionary = ModifyDictionary(self._running_dictionary)      
+        modify_dictionary = ModifyDictionary(self._running_dictionary)  
+        self._running_dictionary['designs'] = []
         self._running_dictionary['designs'] = modify_dictionary.get_items("design")  
         
         choose_option = self.start_thread("Approve Design",['goal','criteria','designs','n'])
@@ -27,6 +28,7 @@ class designer(Agent):
         self._running_dictionary["output"] = self._running_dictionary[key_text]
         design_plan = self.start_thread("Design Plan",['output','criteria'])
         self.run_thread(design_plan)
+        return self._running_dictionary
         
         
     
@@ -38,7 +40,7 @@ if __name__ == '__main__':
     count_recurse = 1
     llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=3000)  
     filepath = "file1.html"
-    
+    running_dictionary["input"] = running_dictionary["current_task"]
     p = designer(running_dictionary,llm,filepath)
     p.design()
     print(p._running_dictionary)
