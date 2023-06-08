@@ -40,9 +40,7 @@ class executor(Agent):
     def execute(self):
         code = self.start_thread("Write Code",['output','summary','output_format','components','sequence_of_steps_to_complete_output','previous_work'])
         self.run_thread(code,1)
-        modify_dictionary = ModifyDictionary(self._running_dictionary) 
-        self._running_dictionary['code_files'] = []
-        self._running_dictionary['code_files'] = modify_dictionary.get_items("code_file")
+        self._running_dictionary['code_files'] = ea.read_code_from_file(self._filepath)
         self.test()
         self._running_dictionary["previous_work"] = self._running_dictionary["code_files"]
         return self._running_dictionary
