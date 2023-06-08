@@ -15,6 +15,7 @@ class BracketParser():
         while text:
             #look for the first set of brackets in the text string
             key_match = re.search(pattern_key, text)
+            print("searching for key in text: "+text)
             
             if key_match:
                 #clean the text - lower case, strip, replace spaces with underscores

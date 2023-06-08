@@ -19,7 +19,7 @@ class designer(Agent):
         self.run_thread(design_options)
         modify_dictionary = ModifyDictionary(self._running_dictionary)  
         self._running_dictionary['designs'] = []
-        self._running_dictionary['designs'] = modify_dictionary.get_items("design")  
+        self._running_dictionary['designs'] = modify_dictionary.get_items("output_option")  
         
         choose_option = self.start_thread("Approve Design",['goal','criteria','designs','n'])
         self.run_thread(choose_option)

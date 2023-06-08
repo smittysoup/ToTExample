@@ -14,7 +14,7 @@ class executor(Agent):
     def correct_errors(self):
         err_count = 0
         while err_count < 1:
-            code = self.start_thread("Fix Code",['code_file','webpage_errors'])
+            code = self.start_thread("Fix Code",['code_file','code_errors'])
             self.run_thread(code,1)
             if self._running_dictionary["code_file"] != ea.read_code_from_file(self._filepath):
                 self.check_code()
@@ -26,7 +26,7 @@ class executor(Agent):
         puppeteer = self.start_thread("Test Code",['code_file'])
         self.run_thread(puppeteer,2)
         stderr = ea.check_page_with_puppeteer(self._filepath)
-        self._running_dictionary["webpage_errors"] = stderr
+        self._running_dictionary["code_errors"] = stderr
         return None
     
     def sign_off_code(self):
