@@ -9,7 +9,7 @@ class executor(Agent):
         self._llm = llm
         self._filepath = filepath
         self.queue = Queue()
-  
+        self._retry_count=0
     
     def correct_errors(self):
         err_count = 0

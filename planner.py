@@ -13,6 +13,9 @@ class planner(Agent):
         self._test = test
         self._filepath = filepath
         self.queue = Queue()
+        self._retry_count = 0
+        self._task_count = 0
+
   
         
     def plan(self):
@@ -23,11 +26,17 @@ class planner(Agent):
         
     def recurse_plan(self):
         
+
         if self._count_recurse>1:
             self.create_plan()
             self.sign_off_plan()
         
         for task in self._running_dictionary["tasks"]:
+            
+            self._task_count +=1
+            dynamic_label = "task" + str(self._task_count) + " subtask" + str(self._count_recurse)
+            self._dictionaries[dynamic_label] = self._running_dictionary
+            self._filepath = "file"+dynamic_label+".html"
             self._running_dictionary["current_task"] = task
             approve_task = self.start_thread("Evaluate Task",['tasks','current_task'])
             refine_goal = self.start_thread("Refine Goal",['tasks','criteria','goal','current_task'])
@@ -40,10 +49,12 @@ class planner(Agent):
                 then restart planning process with current task as input
                 ''' 
                 #offload dictionary with signed off plan
-                self._dictionaries[str(self.count_recurse)] = self._running_dictionary
                 self._running_dictionary["input"]=task
                 self._count_recurse +=1
-                self._filepath = "file"+self._count_recurse+".html"
+                dictionary_label = "task." + str(self._task_count) + " subtask." + str(self._count_recurse)
+                self._filepath = "file"+dictionary_label+".html"
+                self._dictionaries[dictionary_label] = self._running_dictionary
+
                 self.recurse_plan()
             else: 
                 if self._test:
@@ -53,7 +64,7 @@ class planner(Agent):
                     d = designer(self._running_dictionary,self._llm,self._filepath)                
                     d.design()
                 
-            return self._running_dictionary
+        return self._running_dictionary
     
     def create_plan(self,**kwargs):
         plan = self.start_thread("Plan",["input"])

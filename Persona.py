@@ -207,20 +207,20 @@ class Persona():
                     
         if template_name == "Write Code":
             result = '''You are a skilled web developer.  Your designer has provided you with a specification for a webpage. \n
-                    use the requirements below to produce webpage code that meets the success criteria. \n\n
+                    use the requirements below to produce [WEBPAGE CODE] that meets the success criteria.  You may also have completed previous work on this task.  If so, you can use the previous work to help you complete this task. \n\n
                     [OUTPUT]:{output}\n
                     [SUCCESS CRITERIA]:{success_criteria}\n\n
                     [SUMMARY]:{summary}\n
                     [OUTPUT FORMAT]:{output_format}\n
                     [COMPONENTS]:{components}\n
                     [SEQUENCE OF STEPS TO COMPLETE OUTPUT]:{sequence_of_steps_to_complete_output}\n
-                    
-                    You may also have completed previous work on this task.  If so, you can use the previous work to help you complete this task. \n
                     [PREVIOUS WORK]:{previous_work}\n\n
                     
                     Use the placeholder http://www.test.com for any hyperlinks. \n Comment out any code that would link to resources such as image files that don't currently exist in your context. \n
-                    Your response should be labeled and formatted as shown below.  You must include the label for the [WEBPAGE CODE]: \n
-                    [WEBPAGE CODE]: <YOUR HTML CODE...>\n
+                    Your response should be labeled and formatted as shown below.\n\n
+                    
+                    You must include the label for the [WEBPAGE CODE]: \n\n
+                    [WEBPAGE CODE]: (your code goes here...)\n
 
                     '''   
         if template_name == "Recode":
@@ -242,7 +242,7 @@ class Persona():
                     3. convert the path to a file://, as it is a local path in the current working directory. 
                        - make sure you get the cwd for the path at runtime, for example: path.resolve(process.cwd(), pagePath)\n
                     4. Load the generated page.\n
-                    4.1 add headless mode to the launch command: const browser = await puppeteer.launch({ headless: "new" });\n
+                    4.1 add headless: "new" in curly brackets to the launch command: const browser = await puppeteer.launch();\n
                     5. Interact with the page as needed to test any form input fields.  If there are no fields, do not test them.\n
                     6. Evaluate any JavaScript on the page to check for errors.\n
                     7. log any errors to the console. \n

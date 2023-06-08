@@ -21,7 +21,26 @@ class Agent(Persona):
         self._running_dictionary = din  # storing din as an instance variable
         self.queue = Queue()  # creating a new queue object  
         self._llm = llm  # storing the llm as an instance variable      
+        self._retry_count = 0
 
+    def _check_label(self,task,result):
+        result = result.strip()
+        if task == "Write Code":
+            if result.startswith("[WEBPAGE CODE]:"):
+                return self._parse(result)
+            else:
+                return self._parse("[WEBPAGE CODE]: " + result)
+        elif task == "Test Code":
+            if result.startswith("[PUPPETEER SCRIPT]:"):
+                return self._parse(result)
+            else:
+                return self._parse("[PUPPETEER SCRIPT]: " + result)
+        elif result.startswith("["):
+                return self._parse(result)
+        else: 
+            return "Invalid task"
+        
+    
     def _generate(self,task, items_list):
         '''
         This function gets the list of values for prompt input variables, passes the list 
@@ -35,7 +54,11 @@ class Agent(Persona):
         response = chain.generate([filtered_dictionary])
         print("Tokens Used: " + str(response.llm_output["token_usage"]["total_tokens"])+ "\n")
         # Parse the response to create a structured output
-        self._parse(response.generations[0][0].text)
+        validate = self._check_label(task,response.generations[0][0].text)
+        if validate == "Invalid task" and self._retry_count<3:
+            self._retry_count +=1
+            print("failed to get valid result...retrying " + str(self._retry_count))
+            self._generate(task, items_list)
         return None
     
     def _parse(self,result):
@@ -67,10 +90,12 @@ class Agent(Persona):
         '''
         thread.join()
         result = self.queue.get()
-        if type==0:
+        if result=="Invalid task":
+            return result
+        elif type==0:
             self._running_dictionary = dict(self._running_dictionary,**result)
             return self._running_dictionary
-        if type==1:
+        elif type==1:
             ea.save_code_to_file(list(result.values())[0],self._filepath)
             return None
         else:
