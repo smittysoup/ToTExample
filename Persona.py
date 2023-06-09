@@ -18,7 +18,7 @@ class Persona():
                         
                         Evaluate the task.  What is the overarching goal that the AI system needs to meet to complete this task?
                         Describe the goal including a discrete list of success criteria.  The success criteria will be used to evaluate whether or not the AI system is successful in completing the task.\n
-                        Your response should be labeled and formatted as shown below.  Make sure that you use square brackets to delineate each part of the response: \n\n
+                        Your response should be labeled and formatted as shown below. \n\n
                         [GOAL]:\n
                         [SUCCESS CRITERIA 1]:\n
                         [SUCCESS CRITERIA 2]:\n

@@ -1,15 +1,13 @@
 dictionary = (
     {  
- 'input': '''create a dynamic, modern, interactive web application using python with flask, html, css, javascript, and any other code libraries necessary to meet requirements.  The purpose of the web application is to allow a user to 
- have a dynamic chat with a large language model, save chat history, and reload prior chats to continue conversations as needed. \n
- The application will need a data layer to store chats, a service layer to call LLM APIs, process results and implement business logic, and a client layer with a webpage for user interaction. \n
- For the UI, the main page should be divided into two sections.  The left navigation, which will contain a history of previous chats, and the main page, which will be split into two horizontal halves.\n
-The top half of the main page will display text from an article that the user will read and scroll through.  The text from the article will be interactive, and the user should be able to highlight and right click into the text and see a menu of options.  The menu should include the following: summarize section, ask a question, suggest a topic\n
-The bottom half of the main page will be dynamically generated text based on the actions selected in the top half. if the user selects summarize, the bottom half will append text to an existing text box.  If the user selects "ask a question" a chat window will appear with a submit button.  If the user selects suggest a topic, a dynamic pane will appear on the right with a list of clickable topics.  Whatever is clicked will generate a prompt to the LLM for more information. \n
- There should also be an icon at the top right of the main page to save the chat, at which point it is added to the list on the left navigation. \n
- if the user selects a saved chat from the left nav, that chat should appear in the main page window as described above.  \n
- The color scheme should remind me of a forest on a sunny summer day''',
-'n': 3, 
+'input': '''Create a simple web application using python and flask.  The web application should render a single page divided into two vertical halves.  On page load the 
+ user should be able to put in a link to a pdf or webpage, click a submit button and have the application display that pdf or webpage.  on the left side of the screen.  the right side of the screen is reserved for other functionality.
+ The page should have a dark theme, with attractive modern styling.''',
+'n': 3,
+'previous_work': None
+    }
+)
+'''
 'pass': 'Yes\n', 
 'webpage_errors': '', 
 'previous_work': None, 
@@ -42,3 +40,4 @@ The bottom half of the main page will be dynamically generated text based on the
   'sequence_of_steps_to_complete_output':       '1. Create left navigation menu with a library of chats.\n                    2. Create main page with a chat box.\n                    3. Add a button to send chats and space to see responses along with the chat history with a timestamp.\n                    4. Add a button to save the chat, at which point it is added to the list on the left navigation.\n                    5. Generate a color scheme using a combination of colors that will remind the user of a beach on a sunny summer day.\n\n                    '
   }
 )
+'''
