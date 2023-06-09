@@ -1,13 +1,11 @@
 dictionary = (
     {  
 'input': '''Create a simple web application using python and flask.  The web application should render a single page divided into two vertical halves.  On page load the 
- user should be able to put in a link to a pdf or webpage, click a submit button and have the application display that pdf or webpage.  on the left side of the screen.  the right side of the screen is reserved for other functionality.
+ user should be able to put in a link to a pdf or webpage, click a submit button and have the application convert that pdf or webpage to text and display that pdf or webpage.  on the left side of the screen.  the right side of the screen is reserved for other functionality.
  The page should have a dark theme, with attractive modern styling.''',
 'n': 3,
-'previous_work': None
-    }
-)
-'''
+'previous_work': None,
+
 'pass': 'Yes\n', 
 'webpage_errors': '', 
 'previous_work': None, 
@@ -40,4 +38,3 @@ dictionary = (
   'sequence_of_steps_to_complete_output':       '1. Create left navigation menu with a library of chats.\n                    2. Create main page with a chat box.\n                    3. Add a button to send chats and space to see responses along with the chat history with a timestamp.\n                    4. Add a button to save the chat, at which point it is added to the list on the left navigation.\n                    5. Generate a color scheme using a combination of colors that will remind the user of a beach on a sunny summer day.\n\n                    '
   }
 )
-'''

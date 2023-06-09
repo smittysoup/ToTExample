@@ -2,7 +2,7 @@ from langchain import OpenAI, PromptTemplate, LLMChain
 
 
 class Persona():
-    def __init__(self, llm:OpenAI):
+    def __init__(self, llm):
         self._llm = llm
         
     def get_template(self,template_name):
@@ -280,13 +280,17 @@ class Persona():
             
 
     def get_prompt_chain(self,prompt_list,template_name):
+        from langchain.prompts.chat import SystemMessagePromptTemplate, ChatPromptTemplate
         string_template = self.get_template(template_name)
-
+       
         prompt = PromptTemplate(input_variables=prompt_list, 
                 template=(string_template)
                 )
         
-        eval_plan_chain= LLMChain(llm=self._llm, prompt=prompt,output_key="node_tasks",verbose=True)      
+        system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
+        chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt])
+        
+        eval_plan_chain= LLMChain(llm=self._llm, prompt=chat_prompt,verbose=True)      
         return(eval_plan_chain)
     
  

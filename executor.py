@@ -55,10 +55,15 @@ class executor(Agent):
 if __name__ == '__main__':
     import openai, os, test_dictionary
     openai.api_key=os.getenv("OPENAI_API_KEY")
-    from langchain import OpenAI
+    from langchain.chat_models import ChatOpenAI
+    from langchain.schema import HumanMessage, SystemMessage
+    
+
     running_dictionary = test_dictionary.dictionary
     count_recurse = 1
-    llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=3000)  
+    #llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=2000)  
+    llm = ChatOpenAI(model_name='gpt-4',temperature=0,max_tokens=3000)
+    
     filepath = "file1.html"
     
     p = executor(running_dictionary,llm,filepath)
