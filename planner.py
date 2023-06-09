@@ -3,6 +3,7 @@ from ModifyDictionary import ModifyDictionary
 from queue import Queue
 from designer import designer
 from executor import executor
+import ExecutorAgent as ea
 
 class planner(Agent):
     def __init__(self,running_dictionary,count_recurse,llm,filepath,test=False):
@@ -22,6 +23,7 @@ class planner(Agent):
         self.create_plan()
         self.sign_off_plan()
         self.recurse_plan()
+        ea.save_code_to_file(self._running_dictionary, filename='CompletedTasks.txt')
         return None        
         
     def recurse_plan(self):
