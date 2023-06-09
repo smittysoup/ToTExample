@@ -10,6 +10,7 @@ class executor(Agent):
         self._filepath = filepath
         self.queue = Queue()
         self._retry_count=0
+        #TODO: get file extension from exector for save code to file, rather than saving everything as html
     
     def correct_errors(self):
         err_count = 0
