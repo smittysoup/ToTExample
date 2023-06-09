@@ -38,7 +38,7 @@ class planner(Agent):
             
             self._task_count +=1
             dynamic_label = "task" + str(self._task_count) + " subtask" + str(self._count_recurse)
-            self._filepath = "file"+dynamic_label+".html"
+            self._filepath = dynamic_label+".txt"
             self._running_dictionary["current_task"] = task
             approve_task = self.start_thread("Evaluate Task",['tasks','current_task'])
             refine_goal = self.start_thread("Refine Goal",['tasks','criteria','goal','current_task'])
@@ -61,7 +61,7 @@ class planner(Agent):
                 self._running_dictionary["input"]=task
                 self._count_recurse +=1
                 dictionary_label = "task." + str(self._task_count) + " subtask." + str(self._count_recurse)
-                self._filepath = "file"+dictionary_label+".html"
+                self._filepath = dictionary_label+".txt"
                 self._dictionaries[dictionary_label] = self._running_dictionary
 
                 self.recurse_plan()
@@ -128,7 +128,7 @@ if __name__ == '__main__':
     count_recurse = 1
     #llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=2000)  
     llm = ChatOpenAI(model_name='gpt-4',temperature=0,max_tokens=2000)
-    filepath = "file1.html"
+    filepath = ""
 
     p = planner(running_dictionary,count_recurse,llm,filepath)
     p.plan()

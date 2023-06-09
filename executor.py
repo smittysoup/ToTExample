@@ -31,9 +31,11 @@ class executor(Agent):
         return None
     
     def sign_off_code(self):
+        recode_count = 0
         approve_code = self.start_thread("Approve Deliverable",['code_files','criteria','goal','output_format','components'])
-        self.run_thread(approve_code)
+        self.run_thread(approve_code) and recode_count < 3
         if self._running_dictionary["code_pass"].lower().strip()!="yes":
+            recode_count += 1
             executor = self.start_thread("Recode",['code_files','code_pass_reason'])
             self.run_thread(executor,1)            
             self.test()
@@ -41,7 +43,9 @@ class executor(Agent):
     def execute(self):
         code = self.start_thread("Write Code",['output','summary','output_format','components','sequence_of_steps_to_complete_output','previous_work'])
         self.run_thread(code,1)
-        self._running_dictionary['code_files'] = ea.read_code_from_file(self._filepath)
+        modify_dictionary = ModifyDictionary(self._running_dictionary)
+        self._running_dictionary['code_files'] =[]
+        self._running_dictionary['code_files'] = modify_dictionary.get_items("code")   
         self.test()
         self._running_dictionary["previous_work"] = self._running_dictionary["code_files"]
         return self._running_dictionary

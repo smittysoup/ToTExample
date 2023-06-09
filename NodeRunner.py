@@ -98,13 +98,18 @@ class Agent(Persona):
         elif type==0:
             self._running_dictionary = dict(self._running_dictionary,**result)
             return self._running_dictionary
-        elif type==1:
-            ea.save_code_to_file(list(result.values())[0],self._filepath)
-            return None
         else:
-            ea.save_code_to_file(list(result.values())[0],"puppeteer_script.js")
-            return None
-    
+            counter = 1
+            for key in result.keys():
+                # Check if 'code' is in the key
+                if 'code' in key:
+                    file_path = "file" + str(counter) + self._filepath 
+                    ea.save_code_to_file(result[key], file_path)
+                    # Increment the counter
+                    counter += 1
+            self._running_dictionary = dict(self._running_dictionary,**result)
+            return self._running_dictionary
+        
 # The main execution of the program
 if __name__ == '__main__':
 
