@@ -279,6 +279,26 @@ class Persona():
 
 
                     '''   
+                    
+        if template_name == "Cleanup":
+            result = '''You are a skilled software engineer and architect.  You have just inherited a project with the success criteria described below.  Unfortunately, the code is a mess. \n
+                    Each file was not named or commented correctly, and many versions of the same files exist.  some files are markdown, some are html, some are css, some are python, etc.  \n
+                    Your job is to sort through all these files and make sure that a final version for each type of code file is created with the full and updated code.  \n\n 
+                    Project Goal: {goal}\n\n
+                    Project Success Criteria: {criteria}\n\n
+                    Code Files: {code_files}\n\n
+                                        
+                    Return consolidated, commented and clean code files representing the full scale of the work that has been done.\n
+                    You must include the label for the [CODE FILE] that you create.  If you have multiple different code files, due to multiple classes within a single language, or due to different languages or components needed for development, label each output as shown. \n\
+                    Note that your response will be parsed by a computer program.  Please ensure that your response is formatted as shown below without additional text:\n\n
+                    
+                    [CODE FILE 1]: (your code goes here...)\n
+                    [CODE FILE 2]: (your code goes here...)\n
+                    .....
+                    [CODE FILE N]: (your code goes here...)\n
+
+
+                    '''   
         return result
             
 

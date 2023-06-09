@@ -7,7 +7,7 @@ import ExecutorAgent as ea
 
 
 class planner(Agent):
-    def __init__(self,running_dictionary,count_recurse,llm,filepath,test=False):
+    def __init__(self,running_dictionary,count_recurse,llm,filepath,test=True):
         self._running_dictionary = running_dictionary
         self._dictionaries = {}
         self._count_recurse = count_recurse
@@ -119,17 +119,30 @@ class planner(Agent):
         return None
     
 if __name__ == '__main__':
-    import openai, os, test_dictionary
+    import openai, os, test_dictionary, json
     openai.api_key=os.getenv("OPENAI_API_KEY")
     from langchain.chat_models import ChatOpenAI
     
-
-    running_dictionary = test_dictionary.dictionary
+    def save_dictionary(self):
+            dict_str = json.dumps(self._dictionaries)
+            # Specify the path to the root directory
+            path = os.getcwd()
+            # Specify the name of the text file
+            filename = "my_dict.txt"
+            # Create the full file path
+            filepath = os.path.join(path, filename)
+            # Write the string to a text file
+            with open(filepath, "w") as file:
+                file.write(dict_str)
+                
+    running_dictionary = test_dictionary.start
     count_recurse = 1
     #llm = OpenAI(model_name="text-davinci-003", temperature=0,max_tokens=2000)  
-    llm = ChatOpenAI(model_name='gpt-4',temperature=0,max_tokens=2000)
+    llm = ChatOpenAI(model_name='gpt-4',temperature=0,max_tokens=3000)
     filepath = ""
 
     p = planner(running_dictionary,count_recurse,llm,filepath)
     p.plan()
-    print(p._running_dictionary)
+    save_dictionary()
+    
+    

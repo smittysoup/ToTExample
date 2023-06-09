@@ -41,6 +41,7 @@ class executor(Agent):
             self.test()
     
     def execute(self):
+        self._llm.max_tokens=4000
         code = self.start_thread("Write Code",['output','summary','output_format','components','sequence_of_steps_to_complete_output','previous_work'])
         self.run_thread(code,1)
         modify_dictionary = ModifyDictionary(self._running_dictionary)
