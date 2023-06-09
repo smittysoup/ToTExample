@@ -221,6 +221,7 @@ class Persona():
                     Your response should be labeled and formatted as shown below.\n\n
                     
                     You must include the label for the [CODE FILE] that you create.  If you have multiple different code files, due to multiple classes within a single language, or due to different languages or components needed for development, label each output as shown. \n\n
+                    Note that your response will be parsed by a computer program.  Please ensure that your response is formatted as shown below without additional text:\n\n
                     [CODE FILE 1]: (your code goes here...)\n
                     [CODE FILE 2]: (your code goes here...)\n
                     .....
@@ -232,9 +233,11 @@ class Persona():
                     webpage: {code_files}\n\n
                     reason for rejection: {code_pass_reason}\n\n
                                         
-                    fix the issues in your code and return the corrected code.\n
-                    if you are unable to fix the issues, return the original code. \n\n
-                    You must include the label for the [CODE FILE] that you create.  If you have multiple different code files, due to multiple classes within a single language, or due to different languages or components needed for development, label each output as shown. \n\n
+                    fix the issues in your code and return the corrected code along with an explanation of what you changed.\n
+                    if you are unable to fix the issues, return the original code, again with the explanation of why you weren't able to make changes. \n\n
+                    You must include the label for the [CODE FILE] that you create.  If you have multiple different code files, due to multiple classes within a single language, or due to different languages or components needed for development, label each output as shown. \n
+                    Note that your response will be parsed by a computer program.  Please ensure that your response is formatted as shown below without additional text:\n\n
+                    [EXPLANATION]:\n
                     [CODE FILE 1]: (your code goes here...)\n
                     [CODE FILE 2]: (your code goes here...)\n
                     .....
